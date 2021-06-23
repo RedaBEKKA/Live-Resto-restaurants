@@ -137,7 +137,7 @@ return (
 
                         >
                         <View style={styles.containerH}  >
-                            <Text style={styles.btnTitle}> Open Maintenent</Text>
+                            <Text style={styles.btnTitle}> Ouvrir Maintenent</Text>
                         </View>   
     
                     </TouchableOpacity>

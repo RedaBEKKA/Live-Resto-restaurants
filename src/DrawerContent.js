@@ -19,17 +19,21 @@ import {
     ActivityIndicator
 } from "react-native-paper";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { AuthContext, DataContext } from "../components/context"
+import { AuthContext, DataContext, ShowDataOpen } from "../components/context"
 
 
 export function DrawerContent(props) {
     const donne = useContext(DataContext)
     const paperTheme = useTheme();
+    const [isEnabled, setIsEnabled] = useState(false);
 
-    const { signOut, toggleTheme } = React.useContext(AuthContext)
+    const toggleSwitch =  openData ? toggleOpen : toggleOff ;
+
+
+    const { signOut, toggleOff, toggleOpen } = useContext(AuthContext)
+    const openData = useContext(ShowDataOpen)
+
     
-    const { visible } = React.useContext(DataContext)
-
 
 
 
@@ -58,18 +62,12 @@ export function DrawerContent(props) {
                                 }}
                                 size={50}
                             />
-
-
                             <View style={{ marginLeft: 15, flexDirection: 'column' }}>
                                 <Title style={styles.title}>{donne.establishment.title}</Title>
                                 <Caption style={styles.caption}>{donne.establishment.subtitle}</Caption>
                             </View>
-
-
                         </View>
-
                     </View>
-
                     <Drawer.Section style={styles.drawerSection}>
                         <DrawerItem
                             icon={({ color, size }) => (
@@ -150,14 +148,16 @@ export function DrawerContent(props) {
                         />
                     </Drawer.Section>
                     <Drawer.Section name="Preferences">
-                        <TouchableRipple onPress={() => { toggleTheme() }}>
-                            <View style={styles.preferences}>
-                                <Text>Pret a recevoir les commandes</Text>
-                                <View pointerEvents="none">
-                                    <Switch value={paperTheme.dark} />
-                                </View>
-                            </View>
-                        </TouchableRipple>
+                        <View style={styles.preferences}>
+                            <Text style={styles.titleH1}>Fermé Le Restaurent Maintenent </Text>
+                            <Switch
+                                trackColor={{ false: "#ccc", true: "#000" }}
+                                thumbColor={isEnabled ? "#087" : "#000"}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={() => {toggleOff()}}
+                                value={isEnabled}
+                            />
+                        </View>
                     </Drawer.Section>
                     <Text style={{ padding: 5, fontWeight: 'bold' }}>
                         Besoin d'aide appellez nous sur 0782205066

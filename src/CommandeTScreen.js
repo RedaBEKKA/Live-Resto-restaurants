@@ -3,11 +3,11 @@ import React,{useState} from 'react'
 import CmdT from '../components/CmdT';
 
 
-const CommandeEcrTScreen=()=> {
+const CommandeEcrTScreen=({props})=> {
  return(
       
 
-      <CmdT />
+      <CmdT  />
         
   )
 }

@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import DatePicker from 'react-native-date-picker'
 import ModeleOpen from './model'
 import ModeleClosed from './modelClosed';
 import ModelContainer from './ModelContainer';
@@ -13,8 +13,10 @@ import {
     TouchableOpacity,
     Switch,
     Image,
-    TextInput
+    TextInput,
+    ScrollView
 } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 
 
 const HoraireSetting = ({ navigation }) => {
@@ -26,77 +28,103 @@ const HoraireSetting = ({ navigation }) => {
     const [heur, setHeur] = useState("N'oublier pas d'ouvrir a 11:00")
     const [order, setOrder] = useState(' Orders Comes when Restaurant Is Open')
     const [isEnabled, setIsEnabled] = useState(false);
-
+    const [debutj, setDate] = useState(new Date())
 
 
     const [horaireData, setHoraireData] = React.useState({
 
-        day1: {
+        day: [{
             id: 1,
-            jour: 'dimanche',
+            jour: 'Dimanche',
             debutj: '08:00',
             finj: '12:00',
             debuts: '15:00',
             fins: '22:00',
 
         },
-        day2: {
+        {
             id: 2,
-            jour: 'lundi',
+            jour: 'Lundi',
             debutj: '08:00',
             finj: '12:00',
             debuts: '15:00',
             fins: '22:00',
 
         },
-        day3: {
+        {
             id: 3,
-            jour: 'mardi',
+            jour: 'Mardi',
             debutj: '08:00',
             finj: '12:00',
             debuts: '15:00',
             fins: '22:00',
 
         },
-        day4: {
+        {
             id: 4,
-            jour: 'mercredi',
+            jour: 'Mercredi',
             debutj: '08:00',
             finj: '12:00',
             debuts: '15:00',
             fins: '22:00',
 
         },
-        day5: {
+        {
             id: 5,
-            jour: 'jeudi',
+            jour: 'Jeudi',
             debutj: '08:00',
             finj: '12:00',
             debuts: '15:00',
             fins: '22:00',
 
         },
-        day6: {
+        {
             id: 6,
-            jour: 'vendredi',
+            jour: 'Vendredi',
             debutj: '08:00',
             finj: '12:00',
             debuts: '15:00',
-            fins: '22:00',
+            fins: '23:00',
 
-        },
-
+        }
+        ]
 
     });
 
+    const DaysList = ({ days }) => {
+        return (
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, margin: 10, backgroundColor: '#eee', paddingHorizontal: 20, width: '90%', alignSelf: 'center' }}>
+
+                <Text style={{ fontSize: 17, fontWeight: 'bold', width: 93, padding: 2, alignSelf: 'center', justifyContent: 'center' }} > {days.jour} </Text>
+
+                <TouchableOpacity 
+                    onPress={() => { navigation.navigate('DetailsSetTime', days)}}
+                    style={{ flexDirection: 'row' }}>
+                    <View style={{ flexDirection: 'row', width: 80, marginRight: 10 }}>
+                        <Text> {days.debutj} |</Text>
+                        <Text> {days.finj} </Text>
+                    </View>
+
+                    <View style={{ flexDirection: 'row', width: 80, marginRight: 15 }}>
+                        <Text> {days.debuts} |</Text>
+                        <Text> {days.fins} </Text>
+                    </View>
+                    <Icon name="settings" color={'#078'} size={16} />
+
+                </TouchableOpacity>
 
 
+
+
+
+            </View>
+
+        )
+    }
 
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
-
-
-    const setTime = () => {
+    const setTime = (index) => {
         setVisible(true)
     }
 
@@ -104,81 +132,30 @@ const HoraireSetting = ({ navigation }) => {
         <View style={styles.container}>
             <View>
 
-                <View style={styles.containerTitle}>
-
-                    <Text style={styles.titleH1}> Paramètre Horaires D'ouverture</Text>
-
+                <View style={[styles.containerTitle, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 12 }]}>
+                    <Text style={[styles.titleH1, { fontSize: 22 }]}> Paramètre Horaires D'ouverture</Text>
+                    <Icon name="settings" color={'#fff'} size={36} />
                 </View>
-                <View style={styles.containerTow}>
-                    <View style={styles.containerLineOne}>
-                        <View style={styles.containerDay}>
-                            <Text style={styles.titleH5}> Days</Text>
-                        </View>
-                        <View style={styles.containerhours}>
-                            <Text style={styles.titleH5}> Debut  | Fin </Text>
-                        </View>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 15, margin: 10, backgroundColor: '#ccc' }}>
+
+                    <Text style={{ fontSize: 17, fontWeight: 'bold' }} > les jours </Text>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ fontSize: 17, fontWeight: 'bold' }}> Debut  | </Text>
+                        <Text style={{ fontSize: 17, fontWeight: 'bold' }}> Fin </Text>
                     </View>
 
-                    <View style={styles.containerLine}>
-
-                        <View style={styles.containerDay}>
-                            <Text style={styles.titleH2}> {horaireData.day1.jour}</Text>
-                        </View>
-                        <View style={styles.containerhours}>
-
-                            <TouchableOpacity onPress={setTime}>
-                                <Text style={styles.titleH2}> {horaireData.day1.debutj} To {horaireData.day1.finj}  </Text>
-                                <Text style={styles.titleH2}>  {horaireData.day1.debuts} To {horaireData.day1.fins}  </Text>
-
-                            </TouchableOpacity>
-
-                            <TouchableOpacity onPress={setTime}>
-                                <Text style={styles.titleH2}> </Text>
-                            </TouchableOpacity>
-
-                        </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <Text style={{ fontSize: 17, fontWeight: 'bold' }}> Debut  | </Text>
+                        <Text style={{ fontSize: 17, fontWeight: 'bold' }}> Fin </Text>
                     </View>
-                    <View style={styles.containerLine}>
-                        <View style={styles.containerDay}>
-                            <Text style={styles.titleH2}> Lundi</Text>
-                        </View>
-                        <View style={styles.containerhours}>
-                            <Text style={styles.titleH2}> 10:00 -- 17:00 </Text>
-                        </View>
-                    </View>
-                    <View style={styles.containerLine}>
-                        <View style={styles.containerDay}>
-                            <Text style={styles.titleH2}> Mardi </Text>
-                        </View>
-                        <View style={styles.containerhours}>
-                            <Text style={styles.titleH2}> 10:00 -- 17:00 </Text>
-                        </View>
-                    </View>
-                    <View style={styles.containerLine}>
-                        <View style={styles.containerDay}>
-                            <Text style={styles.titleH2}> Mercredi </Text>
-                        </View>
-                        <View style={styles.containerhours}>
-                            <Text style={styles.titleH2}> 10:00 -- 17:00 </Text>
-                        </View>
-                    </View>
-                    <View style={styles.containerLine}>
-                        <View style={styles.containerDay}>
-                            <Text style={styles.titleH2}> Jeudi</Text>
-                        </View>
-                        <View style={styles.containerhours}>
-                            <Text style={styles.titleH2}> 10:00 -- 17:00 </Text>
-                        </View>
-                    </View>
-                    <View style={styles.containerLine}>
-                        <View style={styles.containerDay}>
-                            <Text style={styles.titleH2}> Vendredi</Text>
-                        </View>
-                        <View style={styles.containerhours}>
-                            <Text style={styles.titleH2}> 10:00 -- 17:00 </Text>
-                        </View>
-                    </View>
+                </View>
 
+                <View >
+                    <FlatList
+                        data={horaireData.day}
+                        renderItem={({ item, index }) => <DaysList days={item} />}
+                    />
                 </View>
             </View>
 
@@ -189,26 +166,22 @@ const HoraireSetting = ({ navigation }) => {
             >
 
                 <View style={{ alignItems: 'center' }}>
-                    <Text style={styles.titleH5}>
-                        Enter Your Time Here
+                    <Text style={[styles.titleH5, { marginBottom: 15 }]}>
+                        Choisissez L'heure
                     </Text>
 
                 </View>
-                <View style={{ flexDirection: 'row' }}>
-                    <TextInput
-                        style={{ height: 40, width: 100, backgroundColor: '#9CA3AF', margin: 20 }}
-                    // onChangeText={text =>setDay1D(text)}
-                    // value={debut}
-                    />
-                    <TextInput
-                        style={{ height: 40, width: 100, backgroundColor: '#9CA3AF', margin: 20 }}
-                    // onChangeText={text =>setFin(text)}
-                    // value={fin}
+                <View style={{ justifyContent: 'center' }}>
+                    <DatePicker
+                        date={debutj}
+                        mode="time"
+                        onDateChange={setDate}
+                        style={{ alignSelf: 'center', padding: 6 }}
                     />
                 </View>
-                <TouchableOpacity style={styles.btn} onPress={() => setVisible(false)}>
-                    <Text style={styles.titleH3}>
-                        Ajouter
+                <TouchableOpacity style={[styles.btnPiker, { alignSelf: 'flex-end' }]} onPress={() => { setVisible(false) }}>
+                    <Text style={[{ textAlign: "center", fontSize: 18, fontWeight: 'bold', color: '#fff' }]}>
+                        Modifier
                     </Text>
                 </TouchableOpacity>
 
@@ -303,12 +276,16 @@ const styles = StyleSheet.create({
 
     },
     containerMsg: {
-        padding: 10,
-        backgroundColor: '#000'
+        padding: 3,
+        backgroundColor: '#000',
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        justifyContent: 'center'
     },
 
     containerM: {
-        padding: 20,
+        padding: 16,
         flexDirection: "row",
         justifyContent: 'space-evenly'
     },
@@ -379,21 +356,23 @@ const styles = StyleSheet.create({
         backgroundColor: '#00000989',
         padding: 10,
         marginHorizontal: 10,
-        height: 400,
+
         margin: 10,
     },
     containerLine: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: 310,
-        margin: 10,
+        width: '100%',
+        paddingHorizontal: 20,
+        marginTop: 10
+
     },
     containerLineOne: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: 310,
-        margin: 10,
-        color: '#087'
+        width: '100%',
+        marginHorizontal: 10,
+
 
     },
     containerH: {
@@ -407,13 +386,15 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         textAlign: "center",
     },
-    btn: {
+    btnPiker: {
         width: '40%',
         height: 43,
         backgroundColor: '#087',
         alignSelf: 'center',
         justifyContent: 'center',
-        marginLeft: 20
+        marginLeft: 20,
+        borderRadius: 20,
+        marginTop: 30,
 
     },
 });

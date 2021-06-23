@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "C:\\Users\\User\\Desktop\\resto-live_cli\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
+            "outputFile": "C:\\Users\\User\\Desktop\\Live-Resto-restaurants\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values\\values.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\User\\Desktop\\resto-live_cli\\android\\app\\src\\main\\res\\values\\strings.xml",
+                    "source": "C:\\Users\\User\\Desktop\\Live-Resto-restaurants\\android\\app\\src\\main\\res\\values\\strings.xml",
                     "from": {
                         "startLines": "1",
                         "startColumns": "4",
@@ -21,22 +21,20 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\User\\Desktop\\resto-live_cli\\android\\app\\src\\main\\res\\values\\styles.xml",
+                    "source": "C:\\Users\\User\\Desktop\\Live-Resto-restaurants\\android\\app\\build\\generated\\res\\resValues\\debug\\values\\gradleResValues.xml",
                     "from": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "57",
-                        "endLines": "6",
-                        "endColumns": "12",
-                        "endOffsets": "240"
+                        "startLines": "6,8",
+                        "startColumns": "4,4",
+                        "startOffsets": "161,269",
+                        "endColumns": "63,68",
+                        "endOffsets": "220,333"
                     },
                     "to": {
-                        "startLines": "801",
-                        "startColumns": "4",
-                        "startOffsets": "58475",
-                        "endLines": "804",
-                        "endColumns": "12",
-                        "endOffsets": "58655"
+                        "startLines": "635,636",
+                        "startColumns": "4,4",
+                        "startOffsets": "40488,40552",
+                        "endColumns": "63,68",
+                        "endOffsets": "40547,40616"
                     }
                 },
                 {
@@ -173,23 +171,6 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\User\\Desktop\\resto-live_cli\\android\\app\\build\\generated\\res\\resValues\\debug\\values\\gradleResValues.xml",
-                    "from": {
-                        "startLines": "6,8",
-                        "startColumns": "4,4",
-                        "startOffsets": "161,269",
-                        "endColumns": "63,68",
-                        "endOffsets": "220,333"
-                    },
-                    "to": {
-                        "startLines": "635,636",
-                        "startColumns": "4,4",
-                        "startOffsets": "40488,40552",
-                        "endColumns": "63,68",
-                        "endOffsets": "40547,40616"
-                    }
-                },
-                {
                     "source": "C:\\Users\\User\\.gradle\\caches\\transforms-2\\files-2.1\\ae1a1dddf9cea612695d8157e2ff38cd\\transition-1.2.0\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11",
@@ -297,6 +278,25 @@
                         "endLines": "178,179,283,284,285,286,287,288,289,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,526,527,528,530,531,532,533,534,535,536,537,538,539,540,541,542,543,544,545,546,547,548,549,550,551,552,553,554,555,556,557,558,559,560,561,578,579,592,593,594,595,596,597,598,599,600,601,605,638,775,3097,3101,3102,3106,3107,3670,3671,5559,5819,5851,6041,6048",
                         "endColumns": "68,62,69,67,71,69,60,73,72,60,60,61,63,61,60,67,99,59,65,72,68,56,51,61,71,75,64,58,58,59,59,59,59,59,59,59,59,59,59,58,59,59,59,59,59,59,59,59,59,59,58,59,59,58,58,58,58,58,58,34,34,54,62,54,57,56,49,60,56,33,34,34,69,70,116,12,109,12,128,71,66,24,24,24,24,24",
                         "endOffsets": "11298,11361,18431,18499,18571,18641,18702,18776,18849,32991,33052,33114,33178,33240,33301,33369,33469,33529,33595,33668,33737,33794,33846,33908,34498,34574,34639,34749,34808,34868,34928,34988,35048,35108,35168,35228,35288,35348,35408,35467,35527,35587,35647,35707,35767,35827,35887,35947,36007,36067,36126,36186,36246,36305,36364,36423,36482,36541,36600,37453,37488,38137,38200,38255,38313,38370,38420,38481,38538,38572,38607,38785,40743,56664,210743,210944,211054,211255,211384,250999,251066,359020,373972,376037,384361,384738"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\User\\Desktop\\Live-Resto-restaurants\\android\\app\\src\\main\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "57",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "240"
+                    },
+                    "to": {
+                        "startLines": "801",
+                        "startColumns": "4",
+                        "startOffsets": "58475",
+                        "endLines": "804",
+                        "endColumns": "12",
+                        "endOffsets": "58655"
                     }
                 }
             ]

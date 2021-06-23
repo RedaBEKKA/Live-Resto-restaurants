@@ -11,7 +11,7 @@ import SupportScreen from "./src/SupportScreen"
 import SettingsScreen from "./src/SettingsScreen"
 import ExploreScreen from "./src/ExploreScreen"
 import RootStackScreen from "./src/RootStackScreen"
-import { AuthContext, DataContext, CommandContext } from "./components/context"
+import { AuthContext, DataContext, CommandContext ,ShowDataOpen} from "./components/context"
 import CommandeEcrTScreen from "./src/CommandeTScreen";
 import CommandeEcrScreen from "./src/CommandeScreen";
 import HoraireScreen from "./src/HoraireScreen";
@@ -19,7 +19,9 @@ import FermetureScreen from "./src/FermetureScreen";
 import AllCmd from "./components/toutLesCommande";
 import HoraireSetting from "./components/settignHoraire"
 import HomeScreen from './src/HomeScreen'
-
+import EtatCommande from './src/etatCmd'
+import DetailsSetTime from './components/detailshorraire'
+import InfoScreen from './components/infoScreen';
 const Drawer = createDrawerNavigator()
 //7708be4e-5fd2-447b-8fe6-3846b76bbd24
 
@@ -37,13 +39,33 @@ const App = () => {
   myHeaders.append('Authorization', 'Bearer ' + token);
 
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
-  const [visible,setVisible]=React.useState(false);
-  
+  const [visible, setVisible] = React.useState(false);
+
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null);
   const [message, setMessage] = React.useState("");
   const [donne, setDonne] = React.useState([]);
 
+  const [open, setOpen] = React.useState(false);
+
+  const [openData, setOpenData] = React.useState({
+
+    visible: false,
+    ferme: true,
+    btn: true,
+    heur: "N'oublier pas d'ouvrir a 12:00",
+    msg: 'Votre restaurant est fermé',
+  });
+
+
+  const enable = {
+
+  }
+
+  const desable = {
+
+  }
+  const restoState = open ? enable : desable;
 
   const CustomDefaultTheme = {
     ...NavigationDefaultTheme,
@@ -234,9 +256,28 @@ const App = () => {
     toggleTheme: () => {
       setIsDarkTheme(isDarkTheme => !isDarkTheme);
     },
-    toggleOnOff: () => {
-      setVisible(visible => !visible);
+    
+    toggleOpen: () => {
+      setOpenData({
+        ...openData,
+        visible: true,
+        ferme: false,
+        btn: false,
+        heur: 'fermé a 21:00',
+        msg: 'Live Resto est ouvert',
+
+      })
     },
+    toggleOff: () =>
+      setOpenData({
+        ...openData,
+        visible: false,
+        ferme: true,
+        btn: true,
+        heur: "N'oublier pas d'ouvrir a 12:00",
+        msg: 'Votre restaurant est fermé',
+
+      })
 
   }), []);
 
@@ -256,26 +297,37 @@ const App = () => {
     <PaperProvider theme={theme}>
       <AuthContext.Provider value={authContext}>
         <DataContext.Provider value={donne}>
-          <NavigationContainer theme={theme}>
-            {userToken !== null ? (
-              <Drawer.Navigator drawerContent={props =>
-                <DrawerContent {...props} />}>
-                <Drawer.Screen name="Home" component={MainTabScreen} />
-                <Drawer.Screen name="HomeScreen" component={HomeScreen} />
-                <Drawer.Screen name="SupportScreen" component={SupportScreen} />
-                <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
-                <Drawer.Screen name="ExploreScreen" component={ExploreScreen} />
-                <Drawer.Screen name="CommandeEcrTScreen" component={CommandeEcrTScreen} />
-                <Drawer.Screen name="CommandeEcrScreen" component={CommandeEcrScreen} />
-                <Drawer.Screen name="HoraireScreen" component={HoraireScreen} />
-                <Drawer.Screen name="FermetureScreen" component={FermetureScreen} />
-                <Drawer.Screen name="AllCmd" component={AllCmd} />
-                <Drawer.Screen name="HoraireSetting" component={HoraireSetting} />
-              </Drawer.Navigator>)
-              :
-              <RootStackScreen />
-            }
-          </NavigationContainer>
+          <ShowDataOpen.Provider value={openData}>
+
+
+            <NavigationContainer theme={theme}>
+              {userToken !== null ? (
+                <Drawer.Navigator drawerContent={props =>
+                  <DrawerContent {...props} />}>
+                  <Drawer.Screen name="Home" component={MainTabScreen} />
+                  <Drawer.Screen name="HomeScreen" component={HomeScreen} />
+                  <Drawer.Screen name="SupportScreen" component={SupportScreen} />
+                  <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
+                  <Drawer.Screen name="EtatCommande" component={EtatCommande} />
+                  <Drawer.Screen name="ExploreScreen" component={ExploreScreen} />
+                  <Drawer.Screen name="CommandeEcrTScreen" component={CommandeEcrTScreen} />
+                  <Drawer.Screen name="CommandeEcrScreen" component={CommandeEcrScreen} />
+                  <Drawer.Screen name="HoraireScreen" component={HoraireScreen} />
+                  <Drawer.Screen name="FermetureScreen" component={FermetureScreen} />
+                  <Drawer.Screen name="AllCmd" component={AllCmd} />
+                  <Drawer.Screen name="HoraireSetting" component={HoraireSetting} />
+                  <Drawer.Screen name="DetailsSetTime" component={DetailsSetTime} />
+                  <Drawer.Screen name="InfoScreen" component={InfoScreen} />
+                  
+
+
+                </Drawer.Navigator>)
+                :
+                <RootStackScreen />
+              }
+            </NavigationContainer>
+          </ShowDataOpen.Provider>
+
         </DataContext.Provider>
       </AuthContext.Provider>
     </PaperProvider>

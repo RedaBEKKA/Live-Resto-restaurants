@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ModelContainer from './ModelContainer';
-import { AuthContext, DataContext, CommandContext } from './../components/context'
+import { AuthContext, DataContext, CommandContext, ShowDataOpen } from './../components/context'
 
-import TimerLine from './timerLine';
+import TimerLine from './../components/timerLine';
 import {
     View,
     Text,
@@ -18,134 +18,46 @@ import { FlatList } from 'react-native-gesture-handler';
 
 
 const WelcomeScreen = ({ navigation }) => {
-    const { signIn } = React.useContext(AuthContext)
+
     const myHeaders = new Headers();
     const token = '8576b257-8e65-4d1b-95c2-47afba421c21'
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('Authorization', 'Bearer ' + token);
 
-    const commades = [
-        {
-            cmd: {
-                numCmd: 1,
-                heurPrepartion: '10:00',
-                nombreDeCommande: '3',
-                nom: 'A',
-                prenom: 'amadio',
-                nomProduit: "salade",
-                prxi: '200',
-                fraisLivraison: '50',
-                totale: '250',
 
-            }
-        },
-        {
-            cmd: {
-                numCmd: 2,
-                heurPrepartion: '09:00',
-                nombreDeCommande: '9',
-                nom: 'A',
-                prenom: 'amadio',
-                nomProduit: "salade",
-                prxi: '250',
-                fraisLivraison: '100',
-                totale: '350',
-            }
-        },
-        {
-            cmd: {
-                numCmd: 3,
-                heurPrepartion: '10:00',
-                nombreDeCommande: '3',
-                nom: 'A',
-                prenom: 'amadio',
-                nomProduit: "salade",
-                prxi: '550',
-                fraisLivraison: '150',
-                totale: '700',
-            }
-        },
-        {
-            cmd: {
-                numCmd: 4,
-                heurPrepartion: '11:00',
-                nombreDeCommande: '3',
-                nom: 'A',
-                prenom: 'amadio',
-                nomProduit: "salade+digner",
-                prxi: '1200',
-                fraisLivraison: '50',
-                totale: '250',
-            }
-        },
-        {
-            cmd: {
-                numCmd: 5,
-                heurPrepartion: '10:00',
-                nombreDeCommande: '6',
-                nom: 'A',
-                prenom: 'amadio',
-                nomProduit: "salade",
-                prxi: '200',
-                fraisLivraison: '50',
-                totale: '250',
-            }
-        },
 
-    ]
-
-    const orderValide = [
-        {
-            id: '1',
-            nomClient: 'ahmed',
-            numTel: '0776985874',
-            status: 'validé',
-        },
-        {
-            id: '2',
-            nomClient: 'ahmed',
-            numTel: '0776985874',
-            status: 'validé',
-        },
-        {
-            id: '3',
-            nomClient: 'ahmed',
-            numTel: '0776985874',
-            status: 'validé',
-        },
-        {
-            id: '4',
-            nomClient: 'ahmed',
-            numTel: '0776985874',
-            status: 'validé',
-        },
-        {
-            id: '5',
-            nomClient: 'ahmed',
-            numTel: '0776985874',
-            status: 'validé',
-        },
-        {
-            id: '6',
-            nomClient: 'ahmed',
-            numTel: '0776985874',
-            status: 'validé',
-        }
-    ]
-
+    //context
     const donne = useContext(DataContext)
-    //const dataCmd = useContext(CommandContext)
+    const openData = useContext(ShowDataOpen)
+    const { signIn, toggleOpen, toggleOff } = React.useContext(AuthContext)
 
+
+
+
+
+    //  states
     const [Switched, setSwitch] = useState(false)
+
     const [visible, setVisible] = useState(false)
     const [ferme, setFerme] = useState(true)
     const [btn, setBtn] = useState(true)
     const [msg, setMsg] = useState('Votre restaurant est fermé')
     const [heur, setHeur] = useState("N'oublier pas d'ouvrir a 11:00")
     const [order, setOrder] = useState(' Orders Comes when Restaurant Is Open')
+
+
+    // const [openData, setOpenData] = React.useState({
+
+    //     visible: false,
+    //     ferme: true,
+    //     btn: true,
+    //     heur: "N'oublier pas d'ouvrir a 12:00",
+    //     msg:'Votre restaurant est fermé',
+    // });
+
     const [isEnabled, setIsEnabled] = useState(false);
     const [allow, setAllow] = useState(false);
-    // information clients
+    // information clients state
     const [dataCmd, setDataCmd] = useState(['']);
     const [idClient, setIdClient] = useState(['']);
     const [nomClient, setNomClient] = useState(['']);
@@ -157,27 +69,15 @@ const WelcomeScreen = ({ navigation }) => {
     const [prix, setPrix] = useState(['']);
     const [fraisLaivraison, setFraisLaivraison] = useState(['']);
     const [totale, setTotale] = useState(['']);
-    const [etat, setEtat] = React.useState([])
+    const [etat, setEtat] = useState([]);
     const [status, setStatus] = useState(false);
-    const [nameStatus, setNametatus] = useState('Non Validé')
-
+    const [nameStatus, setNametatus] = useState('Non Valider');
     const Validation = status ? '#0f0' : '#f00'
+
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
 
-    const Comamnde = async () => {
-        await fetch('https://dev500.live-resto.fr/apiv2e/orders', {
-            method: 'GET',
-            headers: myHeaders,
-        })//10029
-            .then((res) => res.json())
-            .then(dataCmd => {
-                setDataCmd(dataCmd.orders.toConfirm)
-                console.log(dataCmd.orders.toConfirm)
-
-            })
-    }
-
+    // functions 
 
     useEffect(() => {
         fetch('https://dev500.live-resto.fr/apiv2e/orders', {
@@ -229,14 +129,64 @@ const WelcomeScreen = ({ navigation }) => {
 
 
     }, [])
+    // const toggleOpen = () => {
+
+    //     setOpenData({
+    //         ...openData,
+    //         visible: true,
+    //         ferme: false,
+    //         btn: false,
+    //         heur: 'fermé a 21:00',
+    //         msg:'Live Resto est ouvert',
+
+    //     })
+    // }
+    // const toggleOff = () => 
+    // setOpenData({
+    //     ...openData,
+    //     visible: false,
+    //     ferme: true,
+    //     btn: true,
+    //     heur: "N'oublier pas d'ouvrir a 12:00",
+    //     msg:'Votre restaurant est fermé',
+
+    // }
+
+    // );
+    const Comamnde = async () => {
+        await fetch('https://dev500.live-resto.fr/apiv2e/orders', {
+            method: 'GET',
+            headers: myHeaders,
+        })//10029
+            .then((res) => res.json())
+            .then(dataCmd => {
+                setDataCmd(dataCmd.orders.toConfirm)
+                console.log(dataCmd.orders.toConfirm)
+
+            })
+    }
+    const setAllow2 = (id) => {
+
+        setAllow(true)
+    }
 
     return (
         <View style={styles.container}>
 
             <View>
+                <View style={styles.containerTow}>
+                    <Text style={styles.titleH1s}> {donne.establishment.title}</Text>
+                    <TouchableOpacity style={[{ justifyContent: 'center', alignItems: 'center', padding: 10 }]} onPress={() => Comamnde()}>
+                        <View>
+                            <Icon name="ios-refresh-circle" color={'#087'} size={40} />
+
+                        </View>
+                    </TouchableOpacity>
+
+                </View>
                 {/** btn mode avion */}
                 <View style={styles.containerOne} >
-                    {!btn ? (
+                    {!openData.btn ? (
                         <>
                             <View style={styles.containerOccupe}>
                                 <View style={[styles.Occupe, {}]} >
@@ -244,8 +194,8 @@ const WelcomeScreen = ({ navigation }) => {
                                         <Text style={styles.titleH1}>Mode Occupé</Text>
 
                                         <Switch
-                                            trackColor={{ false: "#767577", true: "#000" }}
-                                            thumbColor={isEnabled ? "#078" : "#f4f3f4"}
+                                            trackColor={{ false: "#ccc", true: "#000" }}
+                                            thumbColor={isEnabled ? "#087" : "#000"}
                                             ios_backgroundColor="#3e3e3e"
                                             onValueChange={toggleSwitch}
                                             value={isEnabled}
@@ -261,73 +211,83 @@ const WelcomeScreen = ({ navigation }) => {
                         </>) : null
                     }
                 </View>
-                <View style={styles.containerTow}>
-                    <Text style={styles.titleH1s}> {donne.establishment.title}</Text>
+                {openData.visible ?
+                    <View >
+                        {etat.map((key) => {
+                            return (
+                                <ScrollView style={{ marginBottom: 0, }}>
+                                    <View style={{ margin: 25 }}>
+                                        <TouchableOpacity style={{ width: 40, height: 40, backgroundColor: 'transparent', position: 'absolute', zIndex: 1, left: -15, top: -15 }} onPress={() => { navigation.navigate("InfoScreen") }} >
+                                            <View>
+                                                <Icon name="md-information-circle" color={'#087'} size={35} />
+                                            </View>
+                                        </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.btn3} onPress={() => { Comamnde() }}>
-                        <View>
-                            <Text style={styles.titleH3} >Refresh</Text>
-                        </View>
-                    </TouchableOpacity>
 
-                </View>
-                <View >
-                    {etat.map((key) => {
-                        return (
-                            // <Text }
-                            //     data={dataCmd.orders.toConfirm}
-                            //         renderItem={({item})=>{
-                            //         <View >
-                            //             <Text style={{color:'red' , fontSize:25}}> {item.phone}</Text>
-                            //         </View>
-                            //         }}
 
-                            //     /> 
-                            //<Text style={{color:'red' , fontSize:25}}>{key.delivery.full_name} zi </Text>
-                      
-                            <ScrollView style={{ marginBottom: 0 }}>
-                                <View style={styles.containerCommande}>
-                                    <View style={styles.containerItem}>
-                                        <View>
-                                            <Text style={styles.titleH4s}> _Id : {key.id}</Text>
-                                            <Text style={styles.titleH4s}> Nom Client : {key.delivery.full_name} </Text>
-                                        </View>
-                                        <View>
-                                            <Text style={styles.titleH4s}> Num Téléphone :{key.delivery.phone}</Text>
-                                            <Text style={styles.titleH4s}> Status : <Text style={[styles.titleH4s, { color: Validation }]}> {nameStatus} </Text>  </Text>
+                                        <TouchableOpacity style={{ width: 95, height: 30, position: 'absolute', zIndex: 2, right: 15, bottom: -10, backgroundColor: '#087', justifyContent: 'center', borderRadius: 10 }}
+                                            onPress={() => { navigation.navigate("InfoScreen") }} bottomDivider
+                                        //  setStatus(true)
+                                        //  setNametatus("Validé")
+
+                                        >
+                                            <View>
+                                                <Text style={[styles.titleH3, { fontSize: 18 }]}>Confirmer</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{ width: 110, height: 30, position: 'absolute', zIndex: 2, right: -10, top: -14, backgroundColor: '#087', justifyContent: 'center', borderRadius: 10 }}
+                                            onPress={() => { navigation.navigate("EtatCommande") }} bottomDivider
+                                        //  setStatus(true)
+                                        //  setNametatus("Validé")
+
+                                        >
+                                            <View>
+                                                <Text style={[styles.titleH3, { fontSize: 20 }]}> # {key.id}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+
+
+                                        <View style={[styles.containerCommande,]}>
+                                            <View style={[styles.containerItem, { margin: 10 }]}>
+                                                <View>
+                                                    <View>
+
+                                                        {/* <Text style={[styles.titleH4s, {}]}> Status : <Text style={[styles.titleH4s, { color: Validation }]}> {nameStatus} </Text>  </Text> */}
+
+                                                    </View>
+
+                                                    {/* <Text style={[styles.titleH4s, { marginTop: 3 }]}> Nom Client : {key.delivery.full_name} </Text> */}
+                                                </View>
+                                                <View>
+                                                    <Text style={[styles.titleH4s, { marginTop: 3 }]}> Date  : {key.for_when}</Text>
+                                                    <Text style={[styles.titleH4s, { marginTop: 3 }]}> Prix Totale  : {key.total} Eur</Text>
+                                                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignSelf: 'center' ,marginTop:3}}>
+                                                        <Icon name="ios-navigate" color={'#078'} size={19} style={{ marginTop: 3 }} />
+                                                        <Text style={{ color: '#fff', fontSize: 16, marginBottom: 10 }}> Aucun livreur n'a encore été trouver</Text>
+
+                                                    </View>
+
+
+                                                </View>
+
+                                            </View>
+
                                         </View>
 
                                     </View>
-                                    <View>
-                                        <TouchableOpacity style={styles.btn2} onPress={() => { setAllow(true) }}>
-                                            <View>
-                                                <Text style={styles.titleH3}> Voir </Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={styles.btn2} onPress={() => {
 
-                                            setStatus(true)
-                                            setNametatus("Validé")
-                                        }} >
-                                            <View>
-                                                <Text style={styles.titleH3}> Validé</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </ScrollView>
-                            
-                    
+                                </ScrollView>
 
 
 
-                        )
-                    })
 
-                    }
-                </View>
 
-                {/*   */}
+                            )
+                        })
+
+                        }
+                    </View>
+                    : null}
 
 
             </View>
@@ -337,35 +297,20 @@ const WelcomeScreen = ({ navigation }) => {
 
 
             <View>
-                {btn ? (
+                {openData.btn ? (
                     <View style={styles.containerMsg}>
                         <View style={styles.containerM} >
-
                             <Icon name="md-information-circle" color={'#087'} size={32} style={{ marginTop: 11 }} />
                             <View>
-                                <Text style={styles.titleH3}>{msg}</Text>
-                                <Text style={styles.titleH3}>{heur} </Text>
+                                <Text style={styles.titleH3}>{openData.msg}</Text>
+                                <Text style={styles.titleH3}>{openData.heur} </Text>
                             </View>
-
                         </View>
 
-                        <TouchableOpacity style={styles.btn}
-                            onPress={() => {
-
-                                setVisible(true)
-                                setFerme(false)
-                                setBtn(false)
-                                setMsg(' Live Resto est ouvert')
-                                setHeur('fermé a 21:00')
-                                setOrder('Waiting For Orders .....')
-                            }
-                            }
-                            name='false'
-                        >
+                        <TouchableOpacity style={styles.btn} onPress={() => { toggleOpen() }}>
                             <View>
                                 <Text style={styles.titleH3}> Get Orders </Text>
                             </View>
-
                         </TouchableOpacity>
 
 
@@ -447,7 +392,7 @@ const WelcomeScreen = ({ navigation }) => {
                     </View>
                 </View>
                 <View style={{ padding: 20 }}>
-                    {etat.map((key) => {
+                    {etat.map((key, id) => {
                         return (
                             <>
                                 <View item={key.id}>
@@ -512,7 +457,7 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         padding: 10,
         backgroundColor: '#000',
-        position:'relative',
+        position: 'relative',
 
 
     },
@@ -562,9 +507,9 @@ const styles = StyleSheet.create({
     },
     containerMsg: {
         padding: 10,
-        position:"absolute",
-        bottom:5,
-        alignSelf:'center',
+        position: "absolute",
+        bottom: 15,
+        alignSelf: 'center',
     },
 
     containerM: {
@@ -599,34 +544,34 @@ const styles = StyleSheet.create({
     containerCommande: {
         backgroundColor: '#000',
         padding: 10,
-        flexDirection: 'row',
-        margin: 10,
+        margin: 1,
         justifyContent: 'space-between',
         borderRadius: 20,
         borderWidth: 1,
         borderColor: '#087',
     },
     titleH4s: {
-        fontSize: 16,
+        fontSize: 18,
         color: "#fff",
-        fontWeight: "bold"
+        fontWeight: "700"
 
 
     },
 
     btn2: {
-        width: 75,
+        width: 85,
         height: 40,
         backgroundColor: '#087',
         justifyContent: 'center',
         margin: 5,
         borderRadius: 10,
         alignSelf: 'center',
-        padding: 5,
+
 
     },
     containerItem: {
-        padding: 10
+        paddingTop: 3,
+        marginLeft: 8
     },
     containerRow: {
         flexDirection: 'row',
@@ -642,7 +587,8 @@ const styles = StyleSheet.create({
     containerTow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: '100%',
+        width: '98%',
+        alignItems: 'center'
     },
     btn3: {
         width: 95,
