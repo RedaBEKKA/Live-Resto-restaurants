@@ -14,12 +14,35 @@ import {
     Switch,
     Image,
     TextInput,
-    ScrollView
+    ScrollView,
+    Modal
 } from 'react-native';
 
 
 const DetailsSetTime = ({ navigation, route }) => {
     const days = route.params
+    const [isVisible,setIsVisible] = useState (false)
+    const [textItem,setTextItem] = useState()
+    const[editItem,setEditItem]= useState()
+    const [data , setData] = useState(days)
+    const onPresseSave = () => {
+        handelEditiItem(editItem)
+        setIsVisible(false)
+    }
+
+    const handelEditiItem=(editItem)=>{
+          if (days.id == editItem){
+                days.debutj = textItem   
+            }
+        
+        setData(data)
+
+    }
+    const editTime = ( ) => {
+        setIsVisible(true)
+        setTextItem(days.debutj)
+        setEditItem(days.id)
+    }
     return (
         <View style={styles.container}>
             <View>
@@ -43,12 +66,24 @@ const DetailsSetTime = ({ navigation, route }) => {
 
                         <View style={{ marginTop: 10, padding: 10 }}>
                             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                                Modifier votre temps de rentrer : {days.debutj}
+                                Modifier votre temps de rentrer :
+                                <TouchableOpacity onPress={()=> {editTime()}}>
+                                    <Text>
+                                        {days.debutj}
+                                    </Text>
+
+                                </TouchableOpacity>
+
                             </Text>
                         </View>
                         <View style={{ marginTop: 10, padding: 10 }}>
                             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                                Modifier votre temps de sortir : {days.finj}
+                                Modifier votre temps de sortir :
+                                <TouchableOpacity>
+                                    <Text>{days.finj}</Text>
+
+                                </TouchableOpacity>
+
                             </Text>
                         </View>
                     </View>
@@ -57,19 +92,30 @@ const DetailsSetTime = ({ navigation, route }) => {
                         <Text style={{ fontSize: 25, fontWeight: "bold" }}>Le Soir</Text>
                         <View style={{ marginTop: 10, padding: 10 }}>
                             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                                Modifier votre temps de rentrer : {days.debuts}
+                                Modifier votre temps de rentrer :
+                                <TouchableOpacity>
+                                    <Text>{days.debuts}</Text>
+
+
+                                </TouchableOpacity>
+
                             </Text>
                         </View>
                         <View style={{ marginTop: 10, padding: 10 }}>
                             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                                Modifier votre temps de sortir : {days.fins}
+                                Modifier votre temps de sortir :
+
+                                <TouchableOpacity>
+                                    <Text>{days.fins}</Text>
+
+                                </TouchableOpacity>
                             </Text>
                         </View>
                     </View>
                 </View>
 
                 <TouchableOpacity>
-                    <View style={{ width: '90%', backgroundColor: '#087', height: 45,borderRadius:10, justifyContent: "center", alignItems: 'center', alignSelf: 'center', marginTop: 30 }}>
+                    <View style={{ width: '90%', backgroundColor: '#087', height: 45, borderRadius: 10, justifyContent: "center", alignItems: 'center', alignSelf: 'center', marginTop: 30 }}>
                         <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#fff' }}>
                             Sauvgarder
                         </Text>
@@ -81,6 +127,35 @@ const DetailsSetTime = ({ navigation, route }) => {
 
 
             </View>
+
+            <Modal
+                animationType='fade'
+                visible={isVisible}
+                onRequestClose={()=>setIsVisible(false)}
+            >
+                <View>
+                    <Text> change time :</Text>
+                     <TextInput
+                        placeholder='enter time '
+                        onChangeText={(text)=> setTextItem(text)}
+                        defaultValue={textItem}
+                        editable={true}
+                        multiline={false}
+                        maxLength={5}
+                     
+                     />
+
+                     <TouchableOpacity
+                        onPress={()=> onPresseSave()}
+                     >
+                         <Text>
+                             Ajouter
+                         </Text>
+                     </TouchableOpacity>
+                </View>
+                
+
+            </Modal>
 
 
 

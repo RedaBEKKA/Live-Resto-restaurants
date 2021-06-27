@@ -71,6 +71,7 @@ const HomeScreen = ({ navigation, route }) => {
     const [etat, setEtat] = useState([]);
     const [status, setStatus] = useState(false);
     const [nameStatus, setNametatus] = useState('Non Valider');
+    const [idCmd, setIdCmd] = useState(null);
     const Validation = status ? '#0f0' : '#f00'
 
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -213,10 +214,16 @@ const HomeScreen = ({ navigation, route }) => {
                 {openData.visible ?
                     <View >
                         {etat.map((key) => {
+                            console.log(key.id, '1')
                             return (
-                                <ScrollView style={{ marginBottom: 0, }}>
-                                    <View style={{ margin: 25 }}>
-                                        <TouchableOpacity style={{ width: 40, height: 40, backgroundColor: 'transparent', position: 'absolute', zIndex: 1, left: -15, top: -15 }} onPress={() => { navigation.navigate("InfoScreen", key) }} >
+                                <ScrollView style={{ marginBottom: 0, }}
+                                
+                                key={key.id}>
+                                    <View style={{ margin: 25 }}
+                                        
+                                    >
+                                        <TouchableOpacity style={{ width: 40, height: 40, backgroundColor: 'transparent', position: 'absolute', zIndex: 1, left: -15, top: -15 }}
+                                            onPress={() => { navigation.navigate("InfoScreen", key) }} >
                                             <View>
                                                 <Icon name="md-information-circle" color={'#087'} size={35} />
                                             </View>
@@ -224,26 +231,39 @@ const HomeScreen = ({ navigation, route }) => {
 
 
 
-                                        <TouchableOpacity style={{ width: 95, height: 30, position: 'absolute', zIndex: 2, right: 15, bottom: -10, backgroundColor: '#087', justifyContent: 'center', borderRadius: 10 }}
-                                            onPress={() => { navigation.navigate("EtatCommande",key) }} bottomDivider
-                                        //  setStatus(true)
-                                        //  setNametatus("Validé")
+                                        <TouchableOpacity style={{
+                                            width: 95,
+                                            height: 30,
+                                            position: 'absolute',
+                                            zIndex: 2,
+                                            right: 15,
+                                            bottom: -10,
+                                            backgroundColor: '#087',
+                                            justifyContent: 'center',
+                                            borderRadius: 10
+                                        }}
+                                            onPress={() => {
+                                                setIdCmd(key.id)
+                                                console.log(idCmd ,' id confirmer' )
+
+                                                navigation.navigate("EtatCommande", { key, data: idCmd })
+                                                console.log(idCmd, "console log idCmd")
+                                                
+                                            }} bottomDivider
+
 
                                         >
                                             <View>
                                                 <Text style={[styles.titleH3, { fontSize: 18 }]}>Confirmer</Text>
                                             </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={{ width: 110, height: 30, position: 'absolute', zIndex: 2, right: -10, top: -14, backgroundColor: '#087', justifyContent: 'center', borderRadius: 10 }}
-                                            onPress={() => { navigation.navigate("EtatCommande", key) }} bottomDivider
-                                        //  setStatus(true)
-                                        //  setNametatus("Validé")
 
-                                        >
-                                            <View>
-                                                <Text style={[styles.titleH3, { fontSize: 20 }]}> # {key.id}</Text>
-                                            </View>
-                                        </TouchableOpacity>
+
+
+                                        <View style={{ width: 110, height: 30, position: 'absolute', zIndex: 2, right: -10, top: -14, backgroundColor: '#087', justifyContent: 'center', borderRadius: 10 }}>
+                                            <Text style={[styles.titleH3, { fontSize: 20 }]}> #{key.id}</Text>
+                                        </View>
+
 
 
                                         <View style={[styles.containerCommande,]}>

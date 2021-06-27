@@ -178,7 +178,7 @@ const App = () => {
   const authContext = React.useMemo(() => ({
     signIn: async (login, password) => {
       console.log(login, password)
-      if (login == 'lalune' && password == "1234") {
+      if (login == 'Sriganesh' && password == "1234" || login == 'lalune' && password == "1234") {
 
         await fetch('https://dev500.live-resto.fr/apiv2e/establishments/authenticate', {
           method: 'POST',
@@ -193,6 +193,7 @@ const App = () => {
         }).then(res => res.json())
           .then((resData) => {
             setDonne(resData)
+            
 
             console.log(donne)
 
@@ -305,7 +306,7 @@ const App = () => {
                 <Drawer.Navigator drawerContent={props =>
                   <DrawerContent {...props} />}>
                   <Drawer.Screen name="Home" component={MainTabScreen} />
-                  <Drawer.Screen name="HomeScreen" component={HomeScreen} />
+                  <Drawer.Screen name="HomeScreen" component={HomeScreen}  />
                   <Drawer.Screen name="SupportScreen" component={SupportScreen} />
                   <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
                   <Drawer.Screen name="EtatCommande" component={EtatCommande} />

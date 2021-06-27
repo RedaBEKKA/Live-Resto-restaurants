@@ -55,7 +55,7 @@ const HoraireSetting = ({ navigation }) => {
             id: 3,
             jour: 'Mardi',
             debutj: '08:00',
-            finj: '12:00',
+            finj: '13:00',
             debuts: '15:00',
             fins: '22:00',
 

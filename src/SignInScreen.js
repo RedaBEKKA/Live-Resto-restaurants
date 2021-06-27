@@ -144,7 +144,7 @@ const SignInScreen = ({ navigation }) => {
                 { text: 'Ok' }]);
         }
 
-        if (login == 'lalune' && password == "1234") {
+        if ( login == 'Sriganesh' && password == "1234" || login == 'lalune' && password == "1234"  ) {
             signIn(login, password);
             Alert.alert('success', `Bienvenue ${login}`, [
                 { text: 'Ok' }]);
