@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ModelContainer from './../components/ModelContainer';
-import { AuthContext, DataContext, CommandContext, ShowDataOpen } from './../components/context'
+import { AuthContext, DataContext, CommandContext, ShowDataOpen, DataStatusContext } from './../components/context'
 import TimerLine from './../components/timerLine';
 import {
     View,
@@ -10,50 +10,31 @@ import {
     TouchableOpacity,
     Switch,
     Image,
-    ScrollView
+    ScrollView,
+    FileList
 } from 'react-native';
 
 
 
 
 const HomeScreen = ({ navigation, route }) => {
-
+    const donne = useContext(DataContext)
     const myHeaders = new Headers();
-    const token = '8576b257-8e65-4d1b-95c2-47afba421c21'
+    const token = donne.establishment.token
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('Authorization', 'Bearer ' + token);
 
 
 
     //context
-    const donne = useContext(DataContext)
+    
     const openData = useContext(ShowDataOpen)
+    const dataStatus = useContext(DataStatusContext)
     const { signIn, toggleOpen, toggleOff } = React.useContext(AuthContext)
-
-
-
-
-
     //  states
-    const [Switched, setSwitch] = useState(false)
-
     const [visible, setVisible] = useState(false)
     const [ferme, setFerme] = useState(true)
-    const [btn, setBtn] = useState(true)
     const [msg, setMsg] = useState('Votre restaurant est fermé')
-    const [heur, setHeur] = useState("N'oublier pas d'ouvrir a 11:00")
-    const [order, setOrder] = useState(' Orders Comes when Restaurant Is Open')
-
-
-    // const [openData, setOpenData] = React.useState({
-
-    //     visible: false,
-    //     ferme: true,
-    //     btn: true,
-    //     heur: "N'oublier pas d'ouvrir a 12:00",
-    //     msg:'Votre restaurant est fermé',
-    // });
-
     const [isEnabled, setIsEnabled] = useState(false);
     const [allow, setAllow] = useState(false);
     // information clients state
@@ -83,7 +64,7 @@ const HomeScreen = ({ navigation, route }) => {
         fetch('https://dev500.live-resto.fr/apiv2e/orders', {
             method: 'GET',
             headers: myHeaders,
-        })//10029
+        })
             .then((res) => res.json())
             .then(dataCmd => {
                 //console.log(dataCmd)
@@ -106,53 +87,12 @@ const HomeScreen = ({ navigation, route }) => {
 
                 })
 
-
-
-
-
-
-                // setCommande(dataCmd.orders.toConfirm[key].delivery.delivery_price)
-                //})
-
-
-                // data.orders.toConfirm.map((i)=>{
-                //   alert(data.orders.toConfirm[i].delivery.phone);
-                //   alert(data.orders.toConfirm[0].delivery.phone);
-                //     setData(data)
-                //     setDeliv(i.delivery)
-
-                //  // 
-
-
             })
         //.catch(err=>console.log(err))
 
 
     }, [])
-    // const toggleOpen = () => {
-
-    //     setOpenData({
-    //         ...openData,
-    //         visible: true,
-    //         ferme: false,
-    //         btn: false,
-    //         heur: 'fermé a 21:00',
-    //         msg:'Live Resto est ouvert',
-
-    //     })
-    // }
-    // const toggleOff = () => 
-    // setOpenData({
-    //     ...openData,
-    //     visible: false,
-    //     ferme: true,
-    //     btn: true,
-    //     heur: "N'oublier pas d'ouvrir a 12:00",
-    //     msg:'Votre restaurant est fermé',
-
-    // }
-
-    // );
+    
     const Comamnde = async () => {
         await fetch('https://dev500.live-resto.fr/apiv2e/orders', {
             method: 'GET',
@@ -175,7 +115,7 @@ const HomeScreen = ({ navigation, route }) => {
 
             <View>
                 <View style={styles.containerTow}>
-                    <Text style={styles.titleH1s}> {donne.establishment.title}</Text>
+                     <Text style={styles.titleH1s}> {donne.establishment.title}</Text>
                     <TouchableOpacity style={[{ justifyContent: 'center', alignItems: 'center', padding: 10 }]} onPress={() => Comamnde()}>
                         <View>
                             <Icon name="ios-refresh-circle" color={'#087'} size={40} />
@@ -184,6 +124,15 @@ const HomeScreen = ({ navigation, route }) => {
                     </TouchableOpacity>
 
                 </View>
+
+                {/* <FileList
+                    data={dataStatus}
+                    renderItem={({item}) => (<Text>hh</Text>)}
+                
+                /> */}
+
+
+
                 {/** btn mode avion */}
                 <View style={styles.containerOne} >
                     {!openData.btn ? (
@@ -214,7 +163,8 @@ const HomeScreen = ({ navigation, route }) => {
                 {openData.visible ?
                     <View >
                         {etat.map((key) => {
-                            console.log(key.id, '1')
+
+                            
                             return (
                                 <ScrollView style={{ marginBottom: 0, }}
                                 
@@ -280,6 +230,8 @@ const HomeScreen = ({ navigation, route }) => {
                                                 <View>
                                                     <Text style={[styles.titleH4s, { marginTop: 3 }]}> Date  : {key.for_when}</Text>
                                                     <Text style={[styles.titleH4s, { marginTop: 3 }]}> Prix Totale  : {key.total} Eur</Text>
+                                                    <Text style={[styles.titleH4s, { marginTop: 3 }]}> Prix Totale  : {dataStatus.order.products.title} hhhh </Text>
+
                                                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignSelf: 'center', marginTop: 3 }}>
                                                         <Icon name="ios-navigate" color={'#078'} size={19} style={{ marginTop: 3 }} />
                                                         <Text style={{ color: '#fff', fontSize: 16, marginBottom: 10 }}> Aucun livreur n'a encore été trouver</Text>

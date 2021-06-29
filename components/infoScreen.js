@@ -1,6 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ModelContainer from './ModelContainer';
+import { AuthContext, DataContext, CommandContext, ShowDataOpen, DataStatusContext } from './context'
+
 
 import {
     View,
@@ -33,6 +35,7 @@ const InfoScreen = ({ navigation: { goBack }, route }) => {
     const [debut, setDebut] = useState('10:00');
     const [fin, setFin] = useState('20:00');
     const key = route.params
+    const dataStatus = useContext(DataStatusContext)
     return (
         <View style={styles.container}>
 
@@ -77,7 +80,7 @@ const InfoScreen = ({ navigation: { goBack }, route }) => {
                     </View>
 
                 </View>
-                <View style={[{ flexDirection: 'column', marginTop: 10, borderRadius: 2 ,width:'90%',alignSelf:'center' }]}>
+                {/* <View style={[{ flexDirection: 'column', marginTop: 10, borderRadius: 2 ,width:'90%',alignSelf:'center' }]}>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: "center" }}>
                         <Icon name="ios-add-circle-outline" color={'#078'} size={30} style={{ margin: 10 }} />
                         <Text style={styles.titleH4s}>Nouvelle Commande</Text>
@@ -90,7 +93,7 @@ const InfoScreen = ({ navigation: { goBack }, route }) => {
                             </View>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View> */}
                 
                 
                 

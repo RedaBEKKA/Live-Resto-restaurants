@@ -1,4 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
+import { Button } from "native-base"
+import * as Animatable from 'react-native-animatable';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Feather from 'react-native-vector-icons/Feather';
+import { AuthContext } from './../components/context'
 import {
     View,
     Text,
@@ -7,33 +12,16 @@ import {
     Platform,
     StyleSheet,
     StatusBar,
-    Alert
+
 } from 'react-native';
-import { Button } from "native-base"
-import SignUpScreen from "./SignUpScreen"
-import * as Animatable from 'react-native-animatable';
-import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
-
-import { AuthContext, DataContext } from './../components/context'
-
-import { useTheme } from 'react-native-paper';
-
-// import { AuthContext } from '../components/context';
-
-// import Users from '../model/users';
 
 
-const SignInScreen = ({ navigation }) => {
-    const validateInput = React.createRef()
-    //const setUserToken = useContext(DataContext)
+
+const SignInScreen = () => {
+
     const [donnee, setDonnee] = useState([])
-
     const [login, setLogin] = useState('')
     const [password, setPassword] = useState('')
-
-
     const [loginData, setLoginData] = React.useState({
 
         check_textInputChange: false,
@@ -41,13 +29,8 @@ const SignInScreen = ({ navigation }) => {
         isValidUser: true,
         isValidPassword: true,
     });
-
     const { signIn, Comamnde } = React.useContext(AuthContext)
-
     const [message, setMessage] = React.useState("");
-
-    // const { colors } = useTheme();
-    // const { signIn } = React.useContext(AuthContext);
 
     const textInputChange = (val) => {
         if (val.trim().length >= 4) {
@@ -66,7 +49,6 @@ const SignInScreen = ({ navigation }) => {
             });
         }
     }
-
     const handlePasswordChange = (val) => {
         if (val.trim().length >= 4) {
             setLoginData({
@@ -82,41 +64,12 @@ const SignInScreen = ({ navigation }) => {
             });
         }
     }
-
     const updateSecureTextEntry = () => {
         setLoginData({
             ...loginData,
             secureTextEntry: !loginData.secureTextEntry
         });
     }
-
-    // const logini = async() => {
-    //     if(setLoginData.login!='' && setLoginData.password != ""){
-    //         //alert('Azul dina')
-    //         await fetch('https://dev500.live-resto.fr/apiv2e/establishments/authenticate',{
-    //             method:'POST',
-    //             headers:{
-    //                 'accept':'application/json',
-    //                 'Content-type':'application/json'
-    //             },
-    //             body:JSON.stringify({
-    //                 'login':login,
-    //                 'password':password,
-    //             })
-    //         })  .then(res=>res.json())
-    //             .then(resData=>{
-    //                 (resData.establishment.token)
-    //                  console.log(loginData.login,loginData.password,resData);
-    //                 setMessage(resData.establishment.token)
-
-
-    //         })
-
-    //     }
-    //     //setUserToken('fgkj');
-
-    // }
-
     const handleValidUser = (val) => {
         if (val.trim().length >= 4) {
             setLoginData({
@@ -130,50 +83,17 @@ const SignInScreen = ({ navigation }) => {
             });
         }
     }
-
     const loginHandle = (login, password) => {
+       
 
-        if (login.length == 0 || password.length == 0) {
-            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-                { text: 'Ok' }]);
-
-
-        } else {
-
-            Alert.alert('Wrong Input!', 'Username or password invalid .', [
-                { text: 'Ok' }]);
-        }
-
-        if ( login == 'Sriganesh' && password == "1234" || login == 'lalune' && password == "1234"  ) {
-            signIn(login, password);
-            Alert.alert('success', `Bienvenue ${login}`, [
-                { text: 'Ok' }]);
-        
-     }
-         //else {
-        //     Alert.alert('Failed', `Network request failed  a ${login}`, [
-        //         { text: 'Ok' }]);
-        // }
-
-
-        
+            if (login.length < 4 && password.length < 4){
+                alert('rempli tout les champ !')
+            }
+            else {
+                signIn(login, password);
+            }
+                
     }
-
-    //     if ( data.login.length == 0 || data.password.length == 0 ) {
-    //         Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-    //             {text: 'Okay'}
-    //         ]);
-    //         return;
-    //     }
-
-    //     if ( foundUser.length == 0 ) {
-    //         Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-    //             {text: 'Okay'}
-    //         ]);
-    //         return;
-    //     }
-    //     signIn(foundUser);
-    // }
 
     return (
         <View style={styles.container}>
@@ -228,8 +148,6 @@ const SignInScreen = ({ navigation }) => {
                         <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
                     </Animatable.View>
                 }
-
-
                 <Text style={[styles.text_footer, {
                     marginTop: 35
                 }]}>Mot de passe</Text>
@@ -357,3 +275,71 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const logini = async() => {
+    //     if(setLoginData.login!='' && setLoginData.password != ""){
+    //         //alert('Azul dina')
+    //         await fetch('https://dev500.live-resto.fr/apiv2e/establishments/authenticate',{
+    //             method:'POST',
+    //             headers:{
+    //                 'accept':'application/json',
+    //                 'Content-type':'application/json'
+    //             },
+    //             body:JSON.stringify({
+    //                 'login':login,
+    //                 'password':password,
+    //             })
+    //         })  .then(res=>res.json())
+    //             .then(resData=>{
+    //                 (resData.establishment.token)
+    //                  console.log(loginData.login,loginData.password,resData);
+    //                 setMessage(resData.establishment.token)
+
+
+    //         })
+
+    //     }
+    //     //setUserToken('fgkj');
+
+    // }
+
+
+
+
+
+
+
+
+
+      // if (login.length == 0 || password.length == 0) {
+        //     Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
+        //         { text: 'Ok' }]);
+
+
+        // } else {
+
+        //     Alert.alert('Wrong Input!', 'Username or password invalid .', [
+        //         { text: 'Ok' }]);
+        // }
