@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ModelContainer from './../components/ModelContainer';
-import { AuthContext, DataContext, CommandContext, ShowDataOpen, DataStatusContext } from './../components/context'
+import { AuthContext, DataContext, ShowDataOpen } from './../components/context'
 import TimerLine from './../components/timerLine';
+import DoubleClick from 'rn-double-click'
 import {
     View,
     Text,
@@ -11,11 +12,9 @@ import {
     Switch,
     Image,
     ScrollView,
-    FileList
+    FileList,
+
 } from 'react-native';
-
-
-
 
 const HomeScreen = ({ navigation, route }) => {
     const donne = useContext(DataContext)
@@ -23,43 +22,23 @@ const HomeScreen = ({ navigation, route }) => {
     const token = donne.establishment.token
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append('Authorization', 'Bearer ' + token);
-
-
-
     //context
-    
     const openData = useContext(ShowDataOpen)
-    const dataStatus = useContext(DataStatusContext)
-    const { signIn, toggleOpen, toggleOff } = React.useContext(AuthContext)
+
+    const { toggleOpen } = React.useContext(AuthContext)
     //  states
     const [visible, setVisible] = useState(false)
     const [ferme, setFerme] = useState(true)
     const [msg, setMsg] = useState('Votre restaurant est fermé')
     const [isEnabled, setIsEnabled] = useState(false);
-    const [allow, setAllow] = useState(false);
     // information clients state
-    const [dataCmd, setDataCmd] = useState(['']);
-    const [idClient, setIdClient] = useState(['']);
-    const [nomClient, setNomClient] = useState(['']);
-    const [phone, setPhone] = useState(['']);
-    const [numCommande, setSumCommande] = useState(['']);
-    const [nombreCmmande, setNombreCmmande] = useState(['']);
-    const [nomProduit, setNomProduit] = useState(['']);
-    const [heurPrepartion, setHeurPrepartion] = useState(['']);
-    const [prix, setPrix] = useState(['']);
-    const [fraisLaivraison, setFraisLaivraison] = useState(['']);
-    const [totale, setTotale] = useState(['']);
+    const [dataCmmd, setDataCmd] = useState(['']);
     const [etat, setEtat] = useState([]);
-    const [status, setStatus] = useState(false);
-    const [nameStatus, setNametatus] = useState('Non Valider');
-    const [idCmd, setIdCmd] = useState(null);
-    const Validation = status ? '#0f0' : '#f00'
-
+    const [idCmdOrder, setIdCmdOrder] = useState('');
+    const [dataStatus, setDataStatus] = React.useState([]);
+    const [ordersMap, setOrder] = React.useState([]);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
-
-    // functions 
-
+    // functions
     useEffect(() => {
         fetch('https://dev500.live-resto.fr/apiv2e/orders', {
             method: 'GET',
@@ -67,32 +46,40 @@ const HomeScreen = ({ navigation, route }) => {
         })
             .then((res) => res.json())
             .then(dataCmd => {
-                //console.log(dataCmd)
-                setDataCmd(dataCmd.orders.toConfirm)
-                console.log(dataCmd.orders.toConfirm)
-                console.log(dataCmd)
+                setDataCmd(dataCmd.orders.others)
+                console.log('data cmmd', dataCmmd)
+                setEtat(dataCmd.orders.others)
+                console.log('etat ', etat)
+            })
 
-                setEtat(dataCmd.orders.toConfirm)
-                dataCmd.orders.toConfirm.map((i, key) => {
-                    setNomClient(dataCmd.orders.toConfirm[i, key].delivery.full_name)
-                    setIdClient(dataCmd.orders.toConfirm[i, key].customer_id)
-                    setPhone(dataCmd.orders.toConfirm[i, key].delivery.phone)
-                    setSumCommande(dataCmd.orders.toConfirm[i, key].origin_id)
-                    setPrix(dataCmd.orders.toConfirm[i, key].delivery_lat)
-                    setFraisLaivraison(dataCmd.orders.toConfirm[i, key].delivery_price)
-                    setTotale(dataCmd.orders.toConfirm[i, key].total)
-                    setHeurPrepartion(dataCmd.orders.toConfirm[i, key].for_when)
-                    setNombreCmmande(dataCmd.orders.toConfirm[i, key].loyalty)
-                    setNomProduit(dataCmd.orders.toConfirm[i, key].id)
+    }, [])
 
+    getOrdersStat = async () => {
+        await fetch('https://dev500.live-resto.fr/apiv2e/orders/details', {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'Content-type': 'application/json',
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({
+                "orderId": idCmdOrder
+            })
+        })
+            .then(res => res.json())
+            .then((dataStatus) => {
+                console.log(
+                    " ///////////////////////////////////////////////////////////////////////////////// msg orders ///////////")
+                setDataStatus(dataStatus)
+                console.log(dataStatus,
+                    " //////////////////////////////////////////////////////////////////////////////////////////////////////// msg orders ///////////")
+                setOrder(dataStatus.order.products)
+                ordersMap.map(i => {
+                    console.log(i.title)
                 })
 
             })
-        //.catch(err=>console.log(err))
-
-
-    }, [])
-    
+    }
     const Comamnde = async () => {
         await fetch('https://dev500.live-resto.fr/apiv2e/orders', {
             method: 'GET',
@@ -105,17 +92,17 @@ const HomeScreen = ({ navigation, route }) => {
 
             })
     }
-    const setAllow2 = (id) => {
-
-        setAllow(true)
-    }
 
     return (
-        <View style={styles.container}>
 
+        
+
+        
+        <View style={styles.container}>
             <View>
+            <ScrollView style={{backgroundColor:'#000'}}>
                 <View style={styles.containerTow}>
-                     <Text style={styles.titleH1s}> {donne.establishment.title}</Text>
+                    <Text style={styles.titleH1s}> {donne.establishment.title}</Text>
                     <TouchableOpacity style={[{ justifyContent: 'center', alignItems: 'center', padding: 10 }]} onPress={() => Comamnde()}>
                         <View>
                             <Icon name="ios-refresh-circle" color={'#087'} size={40} />
@@ -124,15 +111,6 @@ const HomeScreen = ({ navigation, route }) => {
                     </TouchableOpacity>
 
                 </View>
-
-                {/* <FileList
-                    data={dataStatus}
-                    renderItem={({item}) => (<Text>hh</Text>)}
-                
-                /> */}
-
-
-
                 {/** btn mode avion */}
                 <View style={styles.containerOne} >
                     {!openData.btn ? (
@@ -161,112 +139,58 @@ const HomeScreen = ({ navigation, route }) => {
                     }
                 </View>
                 {openData.visible ?
-                    <View >
-                        {etat.map((key) => {
+                    <View>
+                        <ScrollView>
+                            {etat.map((item) => {
+                                return (
 
-                            
-                            return (
-                                <ScrollView style={{ marginBottom: 0, }}
-                                
-                                key={key.id}>
-                                    <View style={{ margin: 25 }}
-                                        
-                                    >
-                                        <TouchableOpacity style={{ width: 40, height: 40, backgroundColor: 'transparent', position: 'absolute', zIndex: 1, left: -15, top: -15 }}
-                                            onPress={() => { navigation.navigate("InfoScreen", key) }} >
-                                            <View>
-                                                <Icon name="md-information-circle" color={'#087'} size={35} />
-                                            </View>
-                                        </TouchableOpacity>
-
-
-
-                                        <TouchableOpacity style={{
-                                            width: 95,
-                                            height: 30,
-                                            position: 'absolute',
-                                            zIndex: 2,
-                                            right: 15,
-                                            bottom: -10,
-                                            backgroundColor: '#087',
-                                            justifyContent: 'center',
-                                            borderRadius: 10
-                                        }}
+                                    <View style={{ marginHorizontal: 15, marginVertical: 20 }} key={item.id}>
+                                        <TouchableOpacity style={styles.confirmer}
                                             onPress={() => {
-                                                setIdCmd(key.id)
-                                                console.log(idCmd ,' id confirmer' )
-
-                                                navigation.navigate("EtatCommande", { key, data: idCmd })
-                                                console.log(idCmd, "console log idCmd")
-                                                
-                                            }} bottomDivider
-
-
+                                                setIdCmdOrder(item.id)
+                                                console.log(idCmdOrder, '8888888888888888888888')
+                                                navigation.navigate("InfoScreen", { item, ordersMap, dataID: idCmdOrder ,token :token})
+                                                getOrdersStat()
+                                            }
+                                            }
                                         >
                                             <View>
-                                                <Text style={[styles.titleH3, { fontSize: 18 }]}>Confirmer</Text>
+                                                <Text style={[styles.titleH3, { fontSize: 18 }]}>details</Text>
                                             </View>
                                         </TouchableOpacity>
 
-
-
                                         <View style={{ width: 110, height: 30, position: 'absolute', zIndex: 2, right: -10, top: -14, backgroundColor: '#087', justifyContent: 'center', borderRadius: 10 }}>
-                                            <Text style={[styles.titleH3, { fontSize: 20 }]}> #{key.id}</Text>
+                                            <Text style={[styles.titleH3, { fontSize: 20 }]}> #{item.id}</Text>
                                         </View>
-
-
 
                                         <View style={[styles.containerCommande,]}>
                                             <View style={[styles.containerItem, { margin: 10 }]}>
                                                 <View>
-                                                    <View>
-
-                                                        {/* <Text style={[styles.titleH4s, {}]}> Status : <Text style={[styles.titleH4s, { color: Validation }]}> {nameStatus} </Text>  </Text> */}
-
-                                                    </View>
-
-                                                    {/* <Text style={[styles.titleH4s, { marginTop: 3 }]}> Nom Client : {key.delivery.full_name} </Text> */}
-                                                </View>
-                                                <View>
-                                                    <Text style={[styles.titleH4s, { marginTop: 3 }]}> Date  : {key.for_when}</Text>
-                                                    <Text style={[styles.titleH4s, { marginTop: 3 }]}> Prix Totale  : {key.total} Eur</Text>
-                                                    <Text style={[styles.titleH4s, { marginTop: 3 }]}> Prix Totale  : {dataStatus.order.products.title} hhhh </Text>
-
-                                                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignSelf: 'center', marginTop: 3 }}>
+                                                    <Text style={[styles.titleH4s, { marginTop: 3 }]}> Date  : {item.for_when}</Text>
+                                                    <Text style={[styles.titleH4s, { marginTop: 3 }]}> Prix Totale  : {item.total} Eur</Text>
+                                                    <View style={{ flexDirection: 'row', justifyContent: 'center', margin: 5 }}>
                                                         <Icon name="ios-navigate" color={'#078'} size={19} style={{ marginTop: 3 }} />
-                                                        <Text style={{ color: '#fff', fontSize: 16, marginBottom: 10 }}> Aucun livreur n'a encore été trouver</Text>
-
+                                                        <Text style={{ color: '#fff', fontSize: 16, marginBottom: 10, }}> Aucun livreur n'a encore été trouver</Text>
                                                     </View>
-
-
                                                 </View>
-
                                             </View>
-
                                         </View>
-
                                     </View>
 
-                                </ScrollView>
+                                )
+                            })
 
+                            }
+                        </ScrollView>
+                    
 
+                    
 
-
-
-                            )
-                        })
-
-                        }
                     </View>
+                        
                     : null}
-
-
+                    </ScrollView>
             </View>
-
-            {/*  data commande*/}
-
-
-
             <View>
                 {openData.btn ? (
                     <View style={styles.containerMsg}>
@@ -290,8 +214,6 @@ const HomeScreen = ({ navigation, route }) => {
                 }
 
             </View>
-
-
             <ModelContainer
                 transparent
                 visible={visible}
@@ -316,7 +238,6 @@ const HomeScreen = ({ navigation, route }) => {
                     {msg}
                 </Text>
             </ModelContainer>
-
             <ModelContainer
                 transparent
                 visible={ferme}
@@ -343,81 +264,9 @@ const HomeScreen = ({ navigation, route }) => {
                 </Text>
             </ModelContainer>
 
-            <ModelContainer style={{ width: '100%', padding: 10 }}
-                transparent
-                visible={allow}
-            >
-
-                <View style={styles.containerRow1}>
-                    <View><Text style={styles.titleH1}>Information du client</Text></View>
-
-                    <View>
-                        <View style={styles.header}>
-                            <TouchableOpacity onPress={() => setAllow(false)}>
-                                <Image
-                                    source={require('./../assets/x.png')}
-                                    style={{ height: 30, width: 30, marginTop: 1 }}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-                <View style={{ padding: 20 }}>
-                    {etat.map((key, id) => {
-                        return (
-                            <>
-                                <View item={key.id}>
-                                    <View style={styles.containerRow}>
-                                        <View><Text style={styles.titleH4}> Numéro Commande :  </Text></View>
-                                        <View><Text>{key.origin_id}</Text></View>
-                                    </View>
-                                    <View style={styles.containerRow}>
-                                        <View><Text style={styles.titleH4}> Nom client :  </Text></View>
-                                        <View><Text>{key.delivery.full_name}</Text></View>
-                                    </View>
-                                    <View style={styles.containerRow}>
-                                        <View><Text style={styles.titleH4}> Nombre commades :  </Text></View>
-                                        <View><Text>{key.loyalty}</Text></View>
-                                    </View>
-                                    <View style={styles.containerRow}>
-                                        <View><Text style={styles.titleH4}> Nom Produit :  </Text></View>
-                                        <View><Text>{key.id}</Text></View>
-                                    </View>
-                                    <View style={styles.containerRow}>
-                                        <View><Text style={styles.titleH4}> Heure Prepartion : </Text></View>
-                                        <View><Text>{key.for_when}</Text></View>
-                                    </View>
-                                    <View style={{ margin: 8 }}>
-                                        <View style={styles.containerRow}>
-                                            <View><Text style={styles.titleH4}> Prix : </Text></View>
-                                            <View><Text style={styles.titleH4}>{key.delivery_lat} Eur</Text></View>
-                                        </View>
-                                        <View style={styles.containerRow}>
-                                            <View><Text style={styles.titleH4}> Frais Livraison : </Text></View>
-                                            <View><Text style={styles.titleH4}>{key.delivery_price} Eur</Text></View>
-                                        </View>
-                                        <View style={[styles.containerRow, { margin: 1 }]}>
-                                            <View><Text style={styles.titleH4}> Totale : </Text></View>
-                                            <View><Text style={styles.titleH4}>{key.total} Eur</Text></View>
-                                        </View>
-                                    </View>
-
-
-
-                                </View>
-                            </>
-
-                        )
-                    })
-
-                    }
-
-                </View>
-
-
-            </ModelContainer>
 
         </View>
+        
     )
 }
 
@@ -575,6 +424,17 @@ const styles = StyleSheet.create({
 
 
     },
+    confirmer: {
+        width: 95,
+        height: 30,
+        position: 'absolute',
+        zIndex: 2,
+        left: 35,
+        bottom: -15,
+        backgroundColor: '#087',
+        justifyContent: 'center',
+        borderRadius: 10
+    },
 });
 export default HomeScreen;
 
@@ -589,32 +449,100 @@ export default HomeScreen;
 
 
 
-{/* <View style={[styles.containerCommande,{borderColor:'#f00'}]}>
-                      <View style={styles.containerItem}>
-                          <View>
-                              <Text style={styles.titleH4s}> id : {idClient} </Text>
-                              <Text style={styles.titleH4s}> nom client : ahmed  </Text>
-                          </View>
-                          <View>
-                              <Text style={styles.titleH4s}> numTel : 0778454786</Text>
-                              <Text style={styles.titleH4s}> status : <Text style={[styles.titleH4s,{color:'#f00'}]}>non validé </Text></Text>
-                          </View>
-                          
-                      </View>
-                      <View>
-                          <TouchableOpacity style={styles.btn2}>
-                              <View>
-                                  <Text style={styles.titleH3}>Voir </Text>
-                              </View>
-                          </TouchableOpacity>
-                          <TouchableOpacity style={styles.btn2}>
-                              <View>
-                                  <Text style={styles.titleH3}> Validé</Text>
-                              </View>
-                          </TouchableOpacity>
-                      </View>
-                  </View> */}
 
 
 
 
+
+
+
+
+
+{/* <ModelContainer style={{ width: '100%', padding: 10 }}
+                transparent
+                visible={allow}
+            >
+
+                <View style={styles.containerRow1}>
+                    <View><Text style={styles.titleH1}>Information du client</Text></View>
+
+                    <View>
+                        <View style={styles.header}>
+                            <TouchableOpacity onPress={() => setAllow(false)}>
+                                <Image
+                                    source={require('./../assets/x.png')}
+                                    style={{ height: 30, width: 30, marginTop: 1 }}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+                <View style={{ padding: 20 }}>
+                    {etat.map((item, id) => {
+                        return (
+                            <>
+                                <View item={item.id}>
+                                    <View style={styles.containerRow}>
+                                        <View><Text style={styles.titleH4}> Numéro Commande :  </Text></View>
+                                        <View><Text>{item.origin_id}</Text></View>
+                                    </View>
+                                    <View style={styles.containerRow}>
+                                        <View><Text style={styles.titleH4}> Nom client :  </Text></View>
+                                        <View><Text>{item.delivery.full_name}</Text></View>
+                                    </View>
+                                    <View style={styles.containerRow}>
+                                        <View><Text style={styles.titleH4}> Nombre commades :  </Text></View>
+                                        <View><Text>{item.loyalty}</Text></View>
+                                    </View>
+                                    <View style={styles.containerRow}>
+                                        <View><Text style={styles.titleH4}> Nom Produit :  </Text></View>
+                                        <View><Text>{item.id}</Text></View>
+                                    </View>
+                                    <View style={styles.containerRow}>
+                                        <View><Text style={styles.titleH4}> Heure Prepartion : </Text></View>
+                                        <View><Text>{item.for_when}</Text></View>
+                                    </View>
+                                    <View style={{ margin: 8 }}>
+                                        <View style={styles.containerRow}>
+                                            <View><Text style={styles.titleH4}> Prix : </Text></View>
+                                            <View><Text style={styles.titleH4}>{item.delivery_lat} Eur</Text></View>
+                                        </View>
+                                        <View style={styles.containerRow}>
+                                            <View><Text style={styles.titleH4}> Frais Livraison : </Text></View>
+                                            <View><Text style={styles.titleH4}>{item.delivery_price} Eur</Text></View>
+                                        </View>
+                                        <View style={[styles.containerRow, { margin: 1 }]}>
+                                            <View><Text style={styles.titleH4}> Totale : </Text></View>
+                                            <View><Text style={styles.titleH4}>{item.total} Eur</Text></View>
+                                        </View>
+                                    </View>
+
+
+
+                                </View>
+                            </>
+
+                        )
+                    })
+
+                    }
+
+                </View>
+
+
+            </ModelContainer> */}
+
+
+
+{/* <TouchableOpacity style={{ width: 40, height: 40, backgroundColor: 'transparent', position: 'absolute', zIndex: 1, left: -15, top: -15 }}
+                                            onPress={() => {
+                                                setIdCmd(item.id)
+                                                console.log(idCmd, ' id confirmer')
+                                                navigation.navigate("EtatCommande", { item, data: idCmd })
+                                            }
+                                            }
+                                        >
+                                            <View>
+                                                <Icon name="md-information-circle" color={'#087'} size={35} />
+                                            </View>
+                                        </TouchableOpacity> */}

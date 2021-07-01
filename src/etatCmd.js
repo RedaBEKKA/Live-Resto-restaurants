@@ -13,8 +13,6 @@ import {
     Image,
     ScrollView
 } from 'react-native';
-import { ceil } from 'react-native-reanimated';
-
 
 const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
     // useEffect(()=>{
@@ -24,67 +22,71 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
 
     // })
 
-    const dataStatus = useContext(DataStatusContext)
 
     const [active, setActive] = React.useState({
 
-        check_Active: true,
-        check_ActiveCuisine: false,
+
+        check_ActiveCuisine: true,
         check_ActiveLivreur: false,
-        Btn1: true,
-        btn2: false,
+        btn2: true,
         btn3: false,
     });
 
-
-    const colorActive = active.tcheck_Active || active.check_ActiveCuisine ? '#087' : '#ccc'
-    const colorTextActive = active.check_Active || active.check_ActiveCuisine ? '#000' : '#ccc'
-    const backgroundActive = active.check_Active || active.check_ActiveCuisine ? '#087' : '#ccc'
+    const colorActive = active.check_ActiveCuisine ? '#087' : '#ccc'
+    const colorTextActive = active.check_ActiveCuisine ? '#000' : '#ccc'
 
     const colorActiveLivreur = active.check_ActiveLivreur ? '#087' : '#ccc'
     const colorTextActiveLivreur = active.check_ActiveLivreur ? '#000' : '#ccc'
 
-
-
-
-
-    const { key, data } = route.params
+    const { item, data } = route.params
 
     return (
 
         <View>
-            <View>
-                <View style={[styles.container, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-                    <TouchableOpacity onPress={() => goBack()}>
-                        <Icon name="arrow-undo-outline" color={'#fff'} size={35} />
-                    </TouchableOpacity>
-
-                    <Text style={{ color: '#fff', fontSize: 21, fontWeight: 'bold' }}>
-                        Etat du Commande # {key.id}
-                    </Text>
-                    <Icon name="ios-information-circle" color={'#fff'} size={40} />
-
+            <View >
+                <View style={styles.containerTitle}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10, alignItems: 'center' }}>
+                        <TouchableOpacity onPress={() => goBack()}>
+                            <Icon name="arrow-undo-outline" color={'#fff'} size={35} />
+                        </TouchableOpacity>
+                        <Text style={[styles.titleH1, { fontSize: 24 }]}>  Commande N : {item.id} </Text>
+                        <Icon name="ios-information-circle-outline" color={'#fff'} size={35} />
+                    </View>
+                    <View style={[{ width: "100%" }]}>
+                        <Text style={[styles.titleH3, { fontSize: 21, color: '#fff' }]}> Récupération : {item.for_when} </Text>
+                    </View>
                 </View>
 
-                <TouchableOpacity onPress={() => { console.log(dataStatus) }}
-                    style={{ backgroundColor: '#078', height: 40, width: '60%', margin: 10, alignSelf: 'center', justifyContent: 'center', alignItems: 'center', borderRadius: 15 }}>
-                    <View>
-                        <Text style={{ color: '#fff', fontSize: 18, fontWeight: 'bold' }}>console.log dataStatus</Text>
+                <View style={[{  backgroundColor: '#fff', marginTop: 13, paddingVertical:5,marginHorizontal:2,paddingHorizontal:5}]}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                        <View style={{ justifyContent: 'center', alignItems: "center", }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: "center",height:55, backgroundColor: '#eee', padding: 5,  borderRadius: 5 }}>
+                                <Icon name="md-person" color={'#078'} size={30} />
+                                <Text style={{ fontSize: 20, color: "#000", fontWeight: 'bold', }}>{item.delivery.full_name}</Text>
+                            </View>
+
+                        </View>
+                        <View style={{ flexDirection: 'row',    }}>
+                            <View style={{  alignItems: "center",  backgroundColor: '#eee',  borderRadius: 5 ,height:55}}>
+                                <Text style={{ fontSize: 20, color: '#000', fontWeight: 'bold', }}>Appler le Client</Text>
+
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between',  alignItems:'center', paddingHorizontal: 15 }}>
+                                    <Icon name="ios-call" color={'#078'} size={19} style={{margin:2}} />
+
+                                    <TouchableOpacity>
+                                        <Text style={{ fontSize: 16, marginVertical: 2, }}>{item.delivery.phone}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
                     </View>
-                </TouchableOpacity>
+                </View>
 
 
                 <View>
-                    <View>
-                        <TouchableOpacity style={{ width: 40, height: 40, backgroundColor: 'transparent', position: 'absolute', zIndex: 3, right: -2, top: 3 }}
-                             >
-                            <View>
-                                <Icon name="ios-close-circle" color={'#f00'} size={35} />
-                            </View>
-                        </TouchableOpacity>
-
+                    <View style={{ marginTop: 20 }}>
                         <View style={{
-                            padding:10,
+                            padding: 10,
                             borderRadius: 10,
                             borderWidth: 1,
                             borderColor: colorActive,
@@ -93,33 +95,36 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
                         }}>
                             <View style={{
                                 flexDirection: 'row',
-                                marginHorizontal:10,
-                                justifyContent:"space-between"
+                                marginHorizontal: 10,
+                                justifyContent: "space-between",
+                                marginVertical: 10
+
                             }}
-                                >
+                            >
                                 <View>
-                                    <Icon name="ios-timer" color={backgroundActive} size={80} />
+                                    <Icon name="ios-restaurant-outline" color={colorActive} size={80} />
                                 </View>
                                 <View>
                                     <Text style={{
                                         fontSize: 24,
                                         fontWeight: 'bold',
-                                        width: '90%',
+                                        width: '80%',
                                         color: colorTextActive,
-                                        marginHorizontal:5
-                                    }}>La commande est en attente</Text>
+                                        marginHorizontal: 5
+                                    }}>La commande est en Prépartion</Text>
                                     <Text style={{
                                         fontWeight: 'bold',
                                         color: '#ccc',
                                         fontSize: 16,
-                                        width: '80%'
-                                    }}>Appoyer sur le button pour passer a la cuisine</Text>
+                                        width: '70%'
+                                    }}>Appoyer sur le button pour met la commande comme prète</Text>
                                 </View>
                             </View>
                             <View>
-                                <TouchableOpacity
+
+                                {active.btn2 ? <TouchableOpacity
                                     style={{
-                                        backgroundColor: backgroundActive,
+                                        backgroundColor: colorActive,
                                         height: 45,
                                         width: '70%',
                                         alignSelf: 'center',
@@ -132,16 +137,14 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
 
                                     }}
                                     onPress={() => {
-                                        //console.log(etat.id)
-                                        // console.log(data, ' id confirmer screen etat')
-                                        // console.log(key.id, ' id passer a la cuisine')
+
                                         setActive({
-                                            check_Active: false,
-                                            check_ActiveCuisine: true,
-                                            check_ActiveLivreur: false,
-                                            Btn1: false,
-                                            btn2: true,
-                                            btn3: false,
+
+                                            check_ActiveCuisine: false,
+                                            check_ActiveLivreur: true,
+
+                                            btn2: false,
+                                            btn3: true,
                                         })
                                     }
 
@@ -154,90 +157,128 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
                                         }}>
 
                                             <Text style={{
-                                                color: colorTextActive,
+                                                color: '#fff',
                                                 fontSize: 21, fontWeight: 'bold',
                                                 marginHorizontal: 15
                                             }}>
-                                                Valider
+                                                Prête
 
                                             </Text>
-                                            <Icon name="md-arrow-down" color={colorTextActive} size={25} />
+                                            <Icon name="ios-checkmark-circle-outline" color='#fff' size={25} />
                                         </View>
                                     </View>
 
-                                </TouchableOpacity>
+                                </TouchableOpacity> : null}
+                                
 
                             </View>
                         </View>
                     </View>
+
 
 
                     <View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 10, marginVertical: 12, borderRadius: 10, borderWidth: 1, borderColor: colorActive, padding: 10 }}>
-                            <View>
-                                <Icon name="ios-restaurant-outline" color={colorActive} size={80} style={{ padding: 1, marginLeft: 3 }} />
-                            </View>
-                            <View >
-                                <View style={{ justifyContent: 'center', paddingTop: 10, marginHorizontal: 5 }}>
-                                    <Text style={{ fontSize: 24, fontWeight: 'bold', width: '70%', color: colorTextActive }}>La commande est en Prépartion</Text>
-                                    <Text style={{ fontWeight: 'bold', color: '#ccc', fontSize: 16, width: '70%', marginLeft: 5 }}>Appoyer sur le button pour met la commande comme prète</Text>
+                        <View style={{
+                            padding: 10,
+                            borderRadius: 10,
+                            borderWidth: 1,
+                            borderColor: colorActive,
+                            margin: 5
+
+                        }}>
+                            <View style={{
+                                flexDirection: 'row',
+                                marginHorizontal: 10,
+                                justifyContent: "space-between",
+                                marginVertical: 10
+                            }}
+                            >
+                                <View>
+                                    <Icon name="ios-checkmark-circle" color={colorActiveLivreur} size={80} />
                                 </View>
+                                <View>
+                                    <Text style={{
+                                        fontSize: 24,
+                                        fontWeight: 'bold',
+                                        width: '75%',
+                                        color: colorTextActiveLivreur,
+                                        marginHorizontal: 5
+                                    }}>Votre commande est prête a livrer</Text>
+                                    <Text style={{
+                                        fontWeight: 'bold',
+                                        color: '#ccc',
+                                        fontSize: 16,
+                                        width: '70%'
+                                    }}>Appoyer sur le button pour passer a un livreur</Text>
+                                </View>
+                            </View>
+
+                            <View>
+
+
+                                {active.btn3 ? <TouchableOpacity
+                                    style={{
+                                        backgroundColor: colorActiveLivreur,
+                                        height: 45,
+                                        width: '70%',
+                                        alignSelf: 'center',
+                                        borderRadius: 10,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        marginTop: 10,
+                                        alignSelf: 'center'
+
+
+                                    }}
+                                    onPress={() => {
+
+                                        { navigation.navigate('Home') }
+                                    }
+
+                                    }>
+
+                                    <View >
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between'
+                                        }}>
+
+                                            <Text style={{
+                                                color: '#fff',
+                                                fontSize: 21, fontWeight: 'bold',
+                                                marginHorizontal: 15
+                                            }}>
+                                                Livrer
+
+                                            </Text>
+                                            <Icon name="ios-send-outline" color='#fff' size={25} />
+                                        </View>
+                                    </View>
+
+                                </TouchableOpacity> : null}
+
                             </View>
                         </View>
-                        {active.btn2 ?
-                            <TouchableOpacity onPress={() => {
-                                setActive({
-                                    check_Active: false,
-                                    check_ActiveCuisine: false,
-                                    check_ActiveLivreur: true,
-                                    Btn1: false,
-                                    btn2: false,
-                                    btn3: true,
-                                })
-                            }}>
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', backgroundColor: backgroundActive, height: 45, width: '70%', alignSelf: 'center', borderRadius: 10, alignItems: 'center', }}>
-                                    <Text style={{ color: colorTextActive, fontSize: 20, fontWeight: 'bold', marginHorizontal: 15 }}>
-                                        prête a livrer
-
-                                    </Text>
-                                    <Icon name="ios-checkmark-circle" color={colorTextActive} size={25} />
-                                </View>
-                            </TouchableOpacity> : null}
-
                     </View>
-                    <View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginHorizontal: 10, marginVertical: 10, borderRadius: 10, borderWidth: 1, borderColor: colorActiveLivreur, padding: 10 }}>
-                            <View>
-                                <Icon name="ios-checkmark-circle" color={colorActiveLivreur} size={80} />
-                            </View>
-                            <View >
-                                <View style={{ justifyContent: 'center', paddingTop: 10 }}>
-                                    <Text style={{ fontSize: 24, fontWeight: 'bold', width: '70%', color: colorTextActiveLivreur }}>Votre commande est prête a livrer</Text>
-                                    <Text style={{ fontWeight: 'bold', color: '#ccc', fontSize: 16, width: '70%' }}>Appoyer sur le button pour passer a un livreur</Text>
-                                </View>
-                            </View>
-                        </View>
 
-                        {active.btn3 ?
-                            <TouchableOpacity >
-                                <View style={{ backgroundColor: colorActiveLivreur, height: 45, width: '60%', alignSelf: 'center', borderRadius: 10, justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row', paddingHorizontal: 60 }}>
-                                    <Text style={{ color: colorTextActiveLivreur, fontSize: 20, fontWeight: 'bold' }}>
-                                        Livrer
-                                    </Text>
-                                    <Icon name="ios-send-outline" color={colorTextActiveLivreur} size={25} />
-                                </View>
-                            </TouchableOpacity> : null}
-                    </View>
+
+
+
                 </View>
             </View>
 
-            <TouchableOpacity style={{ position: 'absolute', right: -11, bottom: -125, marginHorizontal: 20, height: 50, width: 50, backgroundColor: '#fff', borderColor: '#078', borderWidth: 1, borderRadius: 25, justifyContent: 'center', alignItems: 'center' }}
-                onPress={() => { navigation.navigate('Home') }}
-            >
-                <View >
-                    <Icon name="ios-home" color={'#078'} size={32} />
-                </View>
-            </TouchableOpacity>
+            <View style={{ marginVertical: 60 }}>
+                <TouchableOpacity style={{ position: 'absolute', right: -11, bottom: 1, marginHorizontal: 20, height: 50, width: 50, backgroundColor: '#fff', borderColor: '#078', borderWidth: 1, borderRadius: 25, justifyContent: 'center', alignItems: 'center' }}
+                    onPress={() => { navigation.navigate('Home') }}
+                >
+                    <View >
+                        <Icon name="ios-home" color={'#078'} size={32} />
+                    </View>
+                </TouchableOpacity>
+
+            </View>
+
+
         </View >
 
 
@@ -253,7 +294,26 @@ const styles = StyleSheet.create({
         height: 80,
         paddingHorizontal: 10
 
-    }
+    },
+    containerTitle: {
+        backgroundColor: '#087',
+        width: "100%",
+        height: 120,
+        paddingHorizontal: 10,
+        justifyContent: 'center',
+
+    }, titleH1: {
+        fontSize: 26,
+        color: "#fff",
+        fontWeight: 'bold',
+        marginLeft: 1,
+
+    }, titleH3s: {
+        fontSize: 24,
+        color: "#fff",
+        padding: 5,
+        fontWeight: '700'
+    },
 });
 export default EtatCommande;
 

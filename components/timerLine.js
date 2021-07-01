@@ -65,7 +65,7 @@ const TimerLine = () => {
       
         <TouchableOpacity style={styles.btn} onPress={() => setVisible(true)}>
           <View>
-            <Text style={styles.titleH3}> Modifier </Text>
+            <Text style={[styles.titleH3,{fontSize:17}]}> Modifier </Text>
           </View>
         </TouchableOpacity>
         <ModelContainer
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     margin:15
   },
   time: {
-    fontSize: 23,
+    fontSize: 22,
     color: "#000",
     padding:5,
     textAlign: "center",

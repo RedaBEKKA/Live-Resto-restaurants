@@ -32,19 +32,9 @@ const App = () => {
   myHeaders.append('Content-Type', 'application/json');
   myHeaders.append('Authorization', 'Bearer ' + token);
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
-  const [visible, setVisible] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null);
-  const [message, setMessage] = React.useState("");
-
   const [donne, setDonne] = React.useState([]);
-  const [tokenResto, setTokenResto] = React.useState(null)
-  const [statusDonne, setStatusDonne] = React.useState('failed')
-
-
-  const [dataStatus, setDataStatus] = React.useState([]);
-  const [open, setOpen] = React.useState(false);
-  const [nomClient, setNomClient] = React.useState(['']);
   const [openData, setOpenData] = React.useState({
 
     visible: false,
@@ -82,38 +72,10 @@ const App = () => {
     }, 1000)
   }, [])
 
-  useEffect(() => {
-    fetch('https://dev500.live-resto.fr/apiv2e/orders/details', {
-      method: 'POST',
-      headers: {
-        'accept': 'application/json',
-        'Content-type': 'application/json',
-        "Authorization": "Bearer " + token
-      },
-      body: JSON.stringify({
-        "orderId": 55593
-      })
-    })
-      .then(res => res.json())
-      .then((dataStatus) => {
-        console.log(dataStatus,
-          " //////////////////////////////////////////////////////////////////////////////////////////////////////// msg orders ///////////")
-        setDataStatus(dataStatus)
-        console.log(dataStatus,
-          " //////////////////////////////////////////////////////////////////////////////////////////////////////// msg orders ///////////")
-        dataStatus.order.products.map(i => {
-          console.log(i.title)
-        })
-        console.log("msg hellooo")
-      })
 
-  }, [])
 
 
   const authContext = React.useMemo(() => ({
-    
-
-      
     signIn: async(login,password) => {
       if(login!='' && password != ""){
         console.log(login, password, 'nom et password')
@@ -142,11 +104,6 @@ const App = () => {
                   console.log( 'resData.establishment.token ||||||||||||| ',resData.establishment.token)
                   setDonne(resData)
                   setUserToken('fgkj')
-                  //console.log(data.login,data.password,resData);
-                  //setMessage(resData.establishment.token)
-
-
-                  
               })
           }
       },
@@ -202,7 +159,7 @@ const App = () => {
     <PaperProvider theme={theme}>
       <AuthContext.Provider value={authContext}>
         <DataContext.Provider value={donne}>
-          <DataStatusContext.Provider value={dataStatus}>
+          
             <ShowDataOpen.Provider value={openData}>
               <NavigationContainer theme={theme}>
                 {userToken !== null ? (
@@ -228,7 +185,7 @@ const App = () => {
                 }
               </NavigationContainer>
             </ShowDataOpen.Provider>
-          </DataStatusContext.Provider>
+          
         </DataContext.Provider>
       </AuthContext.Provider>
     </PaperProvider>
@@ -238,295 +195,3 @@ const App = () => {
 
 export default App;
 
-
-
-
-
-
-        // console.log(resData, 'resultttttttttttttttt')
-        // if (res.ok) {
-        //   alert('success')
-        //   // setDataStatus("success")
-        //   // setDonne(resData)
-        //   // console.log(donne, 'donner resto :')
-        //   //console.log(donne.establishment.token, 'token resto :')
-        //   //setTokenResto(donne.establishment.token)
-
-        // } else {
-        //   // setDataStatus("success")
-        //   // setDonne(resData)
-        //   // console.log(donne.establishment.token, 'token resto :')
-        //   alert('failed')
-
-        // }
-
-
-
-      // }
-      // else {
-      //   alert('nom et mot de passe vide')
-      // }
-
-
-          //.then((res) => JSON.stringify(res))
-          // .then(res => {
-          //   // if (!res.ok) {
-          //   //   alert('failed')
-          //   //   throw new Error('Network response was not ok')
-          //   // }
-          //   res.json()
-            
-
-
-          // })
-          // .then((resData) => {
-          //   alert('success')
-          //   console.log(resData.establishment, 'resData resto :')
-          //   setDonne(resData)
-
-          // })
-
-
-          // .then((res) => JSON.stringify(res))
-          // .then((resData) => {
-          //   alert('success')
-          //   console.log('resData :',resData )
-          //   setDonne(resData)
-
-          // })
-          // .catch(res => {
-          //   if (!res.ok) {
-          //     alert('failed')
-          //     throw new Error('Network response was not ok')
-          //   } 
-          // })
-
-
-          // .then((resData) => {
-
-          //   alert('success')
-          //   console.log(resData, 'resData resto :')
-          //   setDonne(resData)
-          //   //console.log(donne, 'donner resto :')
-          // }
-
-          // )
-
-          //setUserToken('fgkj');
-
-
-
-
-
-
-
-
-
-
-
-
-// signIn: async (login, password) => {
-      // if (login !== "" && password !== '') {
-
-      //   console.log(login, password, 'nom et password')
-
-      //   await fetch('https://dev500.live-resto.fr/apiv2e/establishments/authenticate', {
-      //     method: 'POST',
-      //     headers: {
-      //       'accept': 'application/json',
-      //       'Content-type': 'application/json'
-      //     },
-      //     body: JSON.stringify({
-      //       'login': login,
-      //       'password': password
-      //     })
-      //   })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- // const userToken = String(foundUser[0].userToken);
-    // const userName = foundUser[0].username;
-
-    // try {
-    //   await AsyncStorage.setItem('userToken', userToken);
-    // } catch(e) {
-    //   console.log(e);
-    // }
-    // // console.log('user token: ', userToken);
-    // dispatch({ type: 'LOGIN', id: userName, token: userToken });
-    // }  
-    //   Comamnde : async () => {
-    //     await fetch('https://dev500.live-resto.fr/apiv2e/orders',{
-    //    method: 'GET',
-    //    headers: myHeaders,
-    //  })//10029
-    //  .then((res)=>res.json())
-    //  .then(dataCmd=>{
-    //    setDataCmd(dataCmd.orders.toConfirm) 
-    //    console.log(dataCmd.orders.toConfirm)
-
-    //})  
-    //} ,  
-
-
-    //   try {
-      //     await AsyncStorage.removeItem('userToken');
-      //   } catch(e) {
-      //     console.log(e);
-      //   }
-      //   dispatch({ type: 'LOGOUT' });
-
-       //console.log(donne);
-            //setMessage(resData.establishment.token)  
-            //console.log(data.login,data.password,resData);
-            //(resData.establishment.token) 
-
-
-
-
-            // fetch('https://dev500.live-resto.fr/apiv2e/orders/details', {
-
-  // method: 'POST',
-
-  // body:JSON.stringify ({
-  //   "orderId": 55593,
-  //   headers: {myHeaders }})
-
-  //   .then((res) => res.json())
-  //   .then(dataStatus => {
-  //     setDataStatus(dataStatus)
-  //     console.log(dataStatus,'555555')
-  //   })
-  // })
-  //   .catch(err => console.log(err))
-
-
-  // const initialLoginState = {
-  //   isLoading: true,
-  //   login: null,
-  //   userToken: null,
-  // };
-
-  // const loginReducer = (prevState, action) => {
-  //   switch( action.type ) {
-  //     case 'RETRIEVE_TOKEN': 
-  //       return {
-  //         ...prevState,
-  //         userToken: action.token,
-  //         isLoading: false,
-  //       };
-  //     case 'LOGIN': 
-  //       return {
-  //         ...prevState,
-  //         login: action.id,
-  //         userToken: action.token,
-  //         isLoading: false,
-  //       };
-  //     case 'LOGOUT': 
-  //       return {
-  //         ...prevState,
-  //         login: null,
-  //         userToken: null,
-  //         isLoading: false,
-  //       };
-  //     case 'REGISTER': 
-  //       return {
-  //         ...prevState,
-  //         login: action.id,
-  //         userToken: action.token,
-  //         isLoading: false,
-  //       };
-  //   }
-  // };

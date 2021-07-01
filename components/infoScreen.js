@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { AuthContext, DataContext, ShowDataOpen } from './../components/context'
+
 import Icon from 'react-native-vector-icons/Ionicons';
 import ModelContainer from './ModelContainer';
-import { AuthContext, DataContext, CommandContext, ShowDataOpen, DataStatusContext } from './context'
-
 
 import {
     View,
@@ -20,88 +20,96 @@ const setTime = () => {
 }
 
 
+const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
 
-
-
-const InfoScreen = ({ navigation: { goBack }, route }) => {
-    const [Switched, setSwitch] = useState(false)
+    const { item, ordersMap, dataID, token } = route.params
     const [visible, setVisible] = useState(false)
-    const [ferme, setFerme] = useState(false)
     const [btn, setBtn] = useState(true)
-    const [msg, setMsg] = useState('Votre restaurant est fermé')
-    const [heur, setHeur] = useState("N'oublier pas d'ouvrir a 11:00")
-    const [order, setOrder] = useState(' Orders Comes when Restaurant Is Open')
-    const [isEnabled, setIsEnabled] = useState(false);
     const [debut, setDebut] = useState('10:00');
     const [fin, setFin] = useState('20:00');
-    const key = route.params
-    const dataStatus = useContext(DataStatusContext)
+
+    const validerCommande = () => {
+        fetch('https://dev500.live-resto.fr/apiv2e/orders/update', {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'Content-type': 'application/json',
+                "Authorization": "Bearer" + token
+            },
+            body: JSON.stringify({
+                "orderId": dataID,
+                "action": "kitchenstate_id",
+                "kitchenstate_id": 10
+            })
+        })
+            .then(res => {
+                if (!res.ok) {
+                    alert('erreur ')
+                    console.log(token)
+                    console.log(dataID)
+                    throw new Error('erreur ! la validation de la commande echoué' ,token)
+                }
+                
+                return res.json()
+            }
+            )
+
+            .then((response) => {
+                console.log(token)
+                console.log(dataID)
+                console.log(response)
+                alert('succes')
+                navigation.navigate("EtatCommande", { item, ordersMap, dataID})
+            })
+
+
+    }
+
+
+
+
     return (
         <View style={styles.container}>
-
             <View>
                 <View style={styles.containerTitle}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', margin: 10, alignItems: 'center' }}>
                         <TouchableOpacity onPress={() => goBack()}>
                             <Icon name="arrow-undo-outline" color={'#fff'} size={35} />
                         </TouchableOpacity>
-                        <Text style={[styles.titleH1, { fontSize: 24 }]}>  Commande N : {key.id} </Text>
+                        <Text style={[styles.titleH1, { fontSize: 24 }]}>  Commande N : {item.id} </Text>
                         <Icon name="ios-information-circle-outline" color={'#fff'} size={35} />
-
                     </View>
                     <View style={[{ width: "100%" }]}>
-                        <Text style={[styles.titleH3, { fontSize: 21, color: '#fff' }]}> Récupération : {key.for_when} </Text>
+                        <Text style={[styles.titleH3, { fontSize: 19, color: '#fff',width:'100%' }]}> Récupération : {item.for_when} </Text>
                     </View>
-
                 </View>
-                
-
-
-
-                <View style={[{ marginTop: 30, marginHorizontal: 8 }]}>
-
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 3 }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: "center" }}>
-                            <Icon name="md-person" color={'#078'} size={30} style={{ margin: 3 }} />
-                            <Text style={{ fontSize: 22, color: "#000", fontWeight: 'bold', marginTop: 5 }}>{key.delivery.full_name}</Text>
-                        </View>
-                        <View>
-                            <TouchableOpacity>
-                                <View style={{ height: 50, flexDirection: 'row', justifyContent: 'center', alignItems: "center" }}>
-                                    <Icon name="ios-call" color={'#078'} size={30} style={{ marginHorizontal: 10 }} />
-                                    <View style={{ flexDirection: 'column' }}>
-                                        <Text style={{ fontSize: 18, color: '#000', fontWeight: 'bold', margin: 3 }}>Appler le Client</Text>
-                                        <Text style={[styles.titleH4s, { marginBottom: 7 }]}>{key.delivery.phone}</Text>
-                                    </View>
-                                </View>
-
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                </View>
-                {/* <View style={[{ flexDirection: 'column', marginTop: 10, borderRadius: 2 ,width:'90%',alignSelf:'center' }]}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: "center" }}>
-                        <Icon name="ios-add-circle-outline" color={'#078'} size={30} style={{ margin: 10 }} />
-                        <Text style={styles.titleH4s}>Nouvelle Commande</Text>
-                    </View>
-                    <View>
-                        <TouchableOpacity>
-                            <View style={{ height: 50, flexDirection: 'row', justifyContent: 'center', alignItems: "center" }}>
-                                <Icon name="ios-create-outline" color={'#078'} size={30} style={{ margin: 10 }} />
-                                <Text style={styles.titleH4s}>Pas de Couverts</Text>
+                <View style={[{  backgroundColor: '#fff', marginTop: 13, paddingVertical:5,marginHorizontal:2,paddingHorizontal:5}]}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                        <View style={{ justifyContent: 'center', alignItems: "center", }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: "center",height:55, backgroundColor: '#eee', padding: 5,  borderRadius: 5 }}>
+                                <Icon name="md-person" color={'#078'} size={30} />
+                                <Text style={{ fontSize: 20, color: "#000", fontWeight: 'bold', }}>{item.delivery.full_name}</Text>
                             </View>
-                        </TouchableOpacity>
+
+                        </View>
+                        <View style={{ flexDirection: 'row',  justifyContent:'space-evenly'  }}>
+                            <View style={{  alignItems: "center",  backgroundColor: '#eee',  borderRadius: 5 ,height:55}}>
+                                <Text style={{ fontSize: 20, color: '#000', fontWeight: 'bold', }}>Appler le Client</Text>
+
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems:'center', paddingHorizontal: 15 }}>
+                                    <Icon name="ios-call" color={'#078'} size={20}  style={{margin:2}} />
+
+                                    <TouchableOpacity>
+                                        <Text style={{ fontSize: 16, marginVertical: 2, }}>{item.delivery.phone}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
                     </View>
-                </View> */}
-                
-                
-                
-                <View style={{zIndex:3}}>
-
-
+                </View>
+                <View style={{ zIndex: 3 }}>
                     <View style={{ width: '95%', borderWidth: 1, borderColor: '#078', justifyContent: 'center', alignSelf: 'center', marginTop: 40, borderRadius: 15 }}>
-                        <View style={{ marginTop: 40 }}></View>
+                        <View style={{ marginTop: 20 }}></View>
 
                         <View style={[styles.btnScondary,
                         {
@@ -113,68 +121,88 @@ const InfoScreen = ({ navigation: { goBack }, route }) => {
                             borderWidth: 1,
                             width: '85%',
                             position: "absolute",
-                            top: -20,
+                            top: -30,
                             zIndex: 1
                         }]}
                             onPress={() => { setBtn(false) }}
 
                         >
                             <View >
-                                <Text style={[styles.btnTitles, { fontSize: 23, color: '#fff' }]}> Détails de la commande </Text>
+                                <Text style={[styles.btnTitles, { fontSize: 22, color: '#fff' }]}> Détails de la commande </Text>
                             </View>
                         </View>
-                        <View style={{ height: 60, backgroundColor: '#eee', paddingHorizontal: 15, marginBottom: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',  borderRadius: 5 ,width:'95%',alignSelf:'center' }}>
-                            <Text style={{ fontSize: 18, fontWeight: 'bold' }}> Non disponible</Text>
-                            <Text style={{fontSize:19,fontWeight:'bold',}}>{key.delivery_lat} Eur</Text>
-                        </View>
-                        <View style={{ marginHorizontal: 30, backgroundColor: '#ccc', padding: 10, borderRadius: 6 ,width:'90%',alignSelf:'center' }}>
+                        {ordersMap.map((i) => {
+                            return (
+                                <View style={{ height: 45, backgroundColor: '#eee', paddingHorizontal: 5, marginBottom: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderRadius: 5, width: '95%', alignSelf: 'center' }}>
+                                    <Text style={{ fontSize: 13, fontWeight: 'bold' ,width:'60%'}}> {i.title} </Text>
+                                    <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',width:100}}>
+                                    <Text style={{ fontSize: 13, fontWeight: 'bold' }}> Qt:{i._joinData.quantity} </Text>
+                                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#078' }}>{i._joinData.price} Eur</Text>
+
+                                    </View>
+                                    
+                                </View>
+                            )
+                        })
+                        }
+                        <View style={{ marginHorizontal: 30, backgroundColor: '#ccc', padding: 10, borderRadius: 6, width: '90%', alignSelf: 'center' }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 3 }}>
                                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Sous totale : </Text>
-                                <Text style={{fontWeight:'bold'}}> {key.delivery_lat} Eur</Text>
+                                <Text style={{ fontWeight: 'bold' }}> {item.delivery_lat} Eur</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 3 }}>
                                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Remise : </Text>
-                                <Text style={{fontWeight:'bold'}}> {key.delivery_price} Eur</Text>
-
+                                <Text style={{ fontWeight: 'bold' }}> {item.delivery_price} Eur</Text>
                             </View>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5 }}>
                                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Totale : </Text>
-                                <Text style={{fontWeight:'bold' ,fontSize:18}}> {key.total} Eur</Text>
-
+                                <Text style={{ fontWeight: 'bold', fontSize: 18 }}> {item.total} Eur</Text>
                             </View>
+                        </View>
+                        <View style={{ marginTop: 25 }}></View>
+                    </View>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                    <TouchableOpacity style={[styles.btnScondary, { width: "40%", marginVertical: 10, backgroundColor: '#eee', borderRadius: 12, justifyContent: "space-evenly", alignItems: 'center', borderColor: '#f00', borderWidth: 1 }]}
+                        onPress={() => {
+
+                            { navigation.navigate('Home') }
+                        }}
+
+                    >
+                        <View >
+                            <Text style={[styles.btnTitles, { fontSize: 23, color: '#f00' }]}> Annuler </Text>
+                        </View>
+
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.btnScondary, { width: "40%", marginVertical: 10, backgroundColor: '#078', borderRadius: 12, justifyContent: 'center', alignItems: 'center', borderColor: '#078', borderWidth: 1 }]}
+                        onPress={() => {
+                            validerCommande()
+                            //navigation.navigate("EtatCommande", { item, ordersMap, dataID})
+
+
+                        }}
+
+                    >
+                        <View  >
+
+                            <Text style={[styles.btnTitles, { fontSize: 23, color: '#fff' }]}> Valider </Text>
 
 
                         </View>
-
-                        <View style={{ marginTop: 25 }}></View>
-
-
-
-                    </View>
-
+                    </TouchableOpacity>
                 </View>
-
-
-
-                <TouchableOpacity style={[styles.btnScondary, { marginVertical: 10, backgroundColor: '#eee', borderRadius: 12, justifyContent: 'center', alignItems: 'center', borderColor: '#078', borderWidth: 1 }]}
+                <TouchableOpacity style={[styles.btnScondary, { width: "70%", marginHorizontal: 10, backgroundColor: '#eee', borderRadius: 12, justifyContent: "space-evenly", alignItems: 'center', borderColor: '#078', borderWidth: 1 }]}
                     onPress={() => { setBtn(false) }}
 
                 >
-                    <View >
+                    <View style={{ flexDirection: 'row', justifyContent: "space-around" }}>
                         <Text style={[styles.btnTitles, { fontSize: 23 }]}> Imprimer </Text>
+                        <Icon name="ios-print-outline" color={'#078'} size={30} style={{ margin: 0 }} />
                     </View>
 
                 </TouchableOpacity>
-                
-
-
-
-
             </View>
-
-
-
-
             <ModelContainer
                 transparent
                 visible={visible}
@@ -203,13 +231,7 @@ const InfoScreen = ({ navigation: { goBack }, route }) => {
                         Ajouter
                     </Text>
                 </TouchableOpacity>
-
-
             </ModelContainer>
-
-
-
-
 
         </View>
     )
@@ -240,7 +262,7 @@ const styles = StyleSheet.create({
 
     },
     btnScondary: {
-        width: '70%',
+
         height: 45,
         backgroundColor: '#ccc',
         alignSelf: 'center',
@@ -271,7 +293,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#087',
         width: "100%",
         height: 120,
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
         justifyContent: 'center'
     },
     titleH3: {
