@@ -40,6 +40,7 @@ const HomeScreen = ({ navigation, route }) => {
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     // functions
     useEffect(() => {
+
         fetch('https://dev500.live-resto.fr/apiv2e/orders', {
             method: 'GET',
             headers: myHeaders,
@@ -54,32 +55,8 @@ const HomeScreen = ({ navigation, route }) => {
 
     }, [])
 
-    getOrdersStat = async () => {
-        await fetch('https://dev500.live-resto.fr/apiv2e/orders/details', {
-            method: 'POST',
-            headers: {
-                'accept': 'application/json',
-                'Content-type': 'application/json',
-                "Authorization": "Bearer " + token
-            },
-            body: JSON.stringify({
-                "orderId": idCmdOrder
-            })
-        })
-            .then(res => res.json())
-            .then((dataStatus) => {
-                console.log(
-                    " ///////////////////////////////////////////////////////////////////////////////// msg orders ///////////")
-                setDataStatus(dataStatus)
-                console.log(dataStatus,
-                    " //////////////////////////////////////////////////////////////////////////////////////////////////////// msg orders ///////////")
-                setOrder(dataStatus.order.products)
-                ordersMap.map(i => {
-                    console.log(i.title)
-                })
 
-            })
-    }
+    
     const Comamnde = async () => {
         await fetch('https://dev500.live-resto.fr/apiv2e/orders', {
             method: 'GET',
@@ -147,10 +124,13 @@ const HomeScreen = ({ navigation, route }) => {
                                     <View style={{ marginHorizontal: 15, marginVertical: 20 }} key={item.id}>
                                         <TouchableOpacity style={styles.confirmer}
                                             onPress={() => {
-                                                setIdCmdOrder(item.id)
-                                                console.log(idCmdOrder, '8888888888888888888888')
-                                                navigation.navigate("InfoScreen", { item, ordersMap, dataID: idCmdOrder ,token :token})
-                                                getOrdersStat()
+                                                
+                                                    
+                                                    
+                                                    navigation.navigate("InfoScreen", { item,token :token})
+                                                
+                                                
+                                               
                                             }
                                             }
                                         >

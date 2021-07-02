@@ -22,14 +22,15 @@ const setTime = () => {
 
 const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
 
-    const { item, ordersMap, dataID, token } = route.params
+    const { item, token } = route.params
     const [visible, setVisible] = useState(false)
     const [btn, setBtn] = useState(true)
     const [debut, setDebut] = useState('10:00');
     const [fin, setFin] = useState('20:00');
+    const [ordersMap, setOrder] = React.useState([]);
 
-    const validerCommande = () => {
-        fetch('https://dev500.live-resto.fr/apiv2e/orders/update', {
+    const validerCommande = async () => {
+        await  fetch('https://dev500.live-resto.fr/apiv2e/orders/update', {
             method: 'POST',
             headers: {
                 'accept': 'application/json',
@@ -37,7 +38,7 @@ const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
                 "Authorization": "Bearer" + token
             },
             body: JSON.stringify({
-                "orderId": dataID,
+                "orderId": item.id,
                 "action": "kitchenstate_id",
                 "kitchenstate_id": 10
             })
@@ -66,6 +67,38 @@ const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
     }
 
 
+    const idData = async()=>{
+        try {
+            await fetch('https://dev500.live-resto.fr/apiv2e/orders/details', {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-type': 'application/json',
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    "orderId": item.id
+                })
+            })
+                .then( res =>   res.json())
+                .then((dataStatus) => {
+                 
+                    setOrder(dataStatus.order.products)
+                    console.log(item.id)
+              
+                })
+            
+        } catch (error) {
+            
+        }
+
+    }
+
+    useEffect (  async () => {
+
+        idData()
+            
+    }, [item.id])
 
 
     return (
