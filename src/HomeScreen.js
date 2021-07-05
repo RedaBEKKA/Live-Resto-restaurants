@@ -37,10 +37,11 @@ const HomeScreen = ({ navigation, route }) => {
     const [idCmdOrder, setIdCmdOrder] = useState('');
     const [dataStatus, setDataStatus] = React.useState([]);
     const [ordersMap, setOrder] = React.useState([]);
+    
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     // functions
-    useEffect(() => {
-        fetch('https://dev500.live-resto.fr/apiv2e/orders', {
+    useEffect(async() => {
+        await fetch('https://dev500.live-resto.fr/apiv2e/orders', {
             method: 'GET',
             headers: myHeaders,
         })
@@ -52,13 +53,16 @@ const HomeScreen = ({ navigation, route }) => {
                 console.log('etat ', etat)
                 etat.map((i) => {
                     console.log('etat  customer_id99', i.customer_id)
+                    console.log('etat.kitchenstate_id from home', i.kitchenstate_id)
+                    
+
                 })
                 
 
 
             })
 
-    }, [etat.customer_id])
+    }, [etat.customer_id ])
 
 
 
@@ -146,6 +150,7 @@ const HomeScreen = ({ navigation, route }) => {
                                                 <View style={[styles.containerItem, { margin: 10 }]}>
                                                     <View>
                                                         <Text style={[styles.titleH4s, { marginTop: 3 }]}> Date  : {item.for_when}</Text>
+                                                        <Text style={[styles.titleH4s, { marginTop: 3 }]}> kitchenstate_id  : {item.kitchenstate_id}</Text>
                                                         <Text style={[styles.titleH4s, { marginTop: 3 }]}> Prix Totale  : {item.total} Eur</Text>
                                                         <View style={{ flexDirection: 'row', justifyContent: 'center', margin: 5 }}>
                                                             <Icon name="ios-navigate" color={'#078'} size={19} style={{ marginTop: 3 }} />

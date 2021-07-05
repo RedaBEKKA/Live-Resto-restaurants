@@ -15,16 +15,70 @@ import {
 } from 'react-native';
 
 const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
+
+
+    const { item, token, id } = route.params
+    const valider = () => {
+
+        try {
+            fetch('https://dev500.live-resto.fr/apiv2e/orders/update', {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'Content-type': 'application/json',
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    "orderId": item.id,
+                    "action": "kitchenstate_id",
+                    "kitchenstate_id": 40
+
+                })
+            })
+                .then(res => res.json())
+                .then((response) => {
+                    console.log('Token ||||', token)
+                    console.log('item.id|||', id)
+                    console.log('response||||', response)
+                    setResult(response.result)
+
+                })
+        } catch (error) {
+
+        }
+
+
+
+
+    }
+
+
+
+    useEffect(async () => {
+        await valider()
+
+    }, [item.kitchenstate_id])
+
+
     // useEffect(()=>{
     //         setTimeout( () => {
     //            navigation.navigate('Home')
     //         },100000);
-
     // })
 
-    
+
+    // const [kitchenStateId, setkitchenStateId] = useState('');
+
+    // useEffect(() => {
+    //     {
+
+    //         setkitchenStateId(30)
+    //     }
+    // }, [])
+
+
     const [result, setResult] = React.useState('')
-    const {  item } = route.params
+
 
 
     const [active, setActive] = React.useState({
@@ -35,18 +89,47 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
     });
 
 
-   
 
-    // useEffect(async () => {
 
-    //     PostToCuisine()
 
-    // }, [item.id])
+
+
+
+
+    const method = async () => {
+        await fetch('https://dev500.live-resto.fr/apiv2e/orders/update', {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'Content-type': 'application/json',
+                "Authorization": "Bearer " + token
+            },
+            body: JSON.stringify({
+                "orderId": id,
+                "action": "kitchenstate_id",
+                "kitchenstate_id": 30
+
+            })
+        })
+            .then(res => res.json())
+            .then((response) => {
+                console.log('Token ||||', token)
+                console.log('item.id|||', id)
+                console.log('response||||', response)
+
+
+            })
+
+    }
+
+
+
+
+
 
 
     const colorActive = active.check_ActiveCuisine ? '#087' : '#ccc'
     const colorTextActive = active.check_ActiveCuisine ? '#000' : '#ccc'
-
     const colorActiveLivreur = active.check_ActiveLivreur ? '#087' : '#ccc'
     const colorTextActiveLivreur = active.check_ActiveLivreur ? '#000' : '#ccc'
 
@@ -88,12 +171,12 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
                                     </TouchableOpacity>
                                 </View>
                             </View>
-                            
+
                         </View>
-                        
+
                     </View>
-                    <Text>kitchenstate_id : {item.kitchenstate_id}</Text>
-                    <Text>state_id : {item.state_id}</Text>
+
+
                 </View>
 
 
@@ -151,21 +234,20 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
 
                                     }}
                                     onPress={() => {
-                                        if (item.id == idInfo) {
+                                        if (id ) {
+                                            method()
                                             setActive({
+                                            check_ActiveCuisine: false,
+                                            check_ActiveLivreur: true,
+                                            btn2: false,
+                                            btn3: true,
+                                        })
 
-                                                check_ActiveCuisine: false,
-                                                check_ActiveLivreur: true,
-
-                                                btn2: false,
-                                                btn3: true,
-                                            })
 
                                         }
+                                       
 
-                                    }
-
-                                    }>
+                                    }}>
 
                                     <View >
                                         <View style={{
@@ -249,7 +331,10 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
                                     }}
                                     onPress={() => {
 
-                                        { navigation.navigate('Home') }
+                                        {
+                                            navigation.push('Home')
+
+                                        }
                                     }
 
                                     }>

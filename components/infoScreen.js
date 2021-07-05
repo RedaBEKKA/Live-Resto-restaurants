@@ -66,76 +66,8 @@ const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
     }, [item.id])
 
 
-    const PostToCuisine = async () => {
-        // try {
-            await fetch('https://dev500.live-resto.fr/apiv2e/orders/update', {
-               method: 'POST',
-               headers: {
-                   'accept': 'application/json',
-                   'Content-type': 'application/json',
-                   "Authorization": "Bearer " + token
-               },
-               body: JSON.stringify({
-                   "orderId": item.id,
-                   "action": "kitchenstate_id",
-                   "kitchenstate_id": 30     
-                    // "orderId": 55593,
-                    // "action": "kitchenstate_id",
-                    // "kitchenstate_id": 30
-               })
-           })
-               .then(res => 
-                { 
-                    console.log('then 1 ' ,res)
-                    return (res.json())
-                
-                } )
-               
-               .then((response) => {
-                   //let resr =  JSON.stringify(response)
-                   console.log('Token ||||',token)
-                   console.log('item.id|||', item.id)
-                   setResult(response)
-                   console.log('response||||', response)
-                   console.log('response||||', response['result'])
-               })
-            
-        // } catch (error) {
-            
-        // }
-    }
-
-    //     axios.post('https://dev500.live-resto.fr/apiv2e/orders/update', {
-            
-    //            headers: {
-    //                'accept': 'application/json',
-    //                'Content-type': 'application/json',
-    //                "Authorization": "Bearer" + token
-    //            },
-    //            body: JSON.stringify({
-                
-    //                 "orderId": 55593,
-    //                 "action": "kitchenstate_id",
-    //                 "kitchenstate_id": 30
-                  
-    //            })
-    //       })
-    //       .then(function (response) {
-    //         console.log(response);
-    //       })
-    //       .catch(function (error) {
-    //         console.log(error);
-    //       });
-
-
-
-    //     } catch (error) {
-    //         console.log('result error',error)
-            
-    //     }
    
-   
-    //    }
+       
 
 
     return (
@@ -175,6 +107,7 @@ const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
                             </View>
                         </View>
                     </View>
+                    <Text>kitchenstate_id : {item.kitchenstate_id}</Text>
                 </View>
                 <View style={{ zIndex: 3 }}>
                     <View style={{ width: '95%', borderWidth: 1, borderColor: '#078', justifyContent: 'center', alignSelf: 'center', marginTop: 40, borderRadius: 15 }}>
@@ -234,32 +167,24 @@ const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
                         onPress={() => {
 
                             { navigation.navigate('Home') }
-                        }}
-
-                    >
+                        }}>
                         <View >
                             <Text style={[styles.btnTitles, { fontSize: 23, color: '#f00' }]}> Annuler </Text>
                         </View>
-
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.btnScondary, { width: "40%", marginVertical: 10, backgroundColor: '#078', borderRadius: 12, justifyContent: 'center', alignItems: 'center', borderColor: '#078', borderWidth: 1 }]}
                         onPress={() => {
-                            PostToCuisine() 
-                            //if (item.kitchenstate_id == '30'){
-                                navigation.navigate("EtatCommande", {item})
-                            //} else {
-                              //  alert('erreur valider la commande ')
-
-                           // }
                             
+                            //valider()
+                            //if (result ){
+                                navigation.navigate("EtatCommande", {item , token:token, id:item.id })
+                            // } else {
+                            //     alert('erreur valider la commande ')
+                            //  }
                         }}
-
-                    >
+                        >
                         <View  >
-
                             <Text style={[styles.btnTitles, { fontSize: 23, color: '#fff' }]}> Valider </Text>
-
-
                         </View>
                     </TouchableOpacity>
                 </View>
