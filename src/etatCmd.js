@@ -22,23 +22,33 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
 
     // })
 
+    
+    const [result, setResult] = React.useState('')
+    const {  item } = route.params
+
 
     const [active, setActive] = React.useState({
-
-
         check_ActiveCuisine: true,
         check_ActiveLivreur: false,
         btn2: true,
         btn3: false,
     });
 
+
+   
+
+    // useEffect(async () => {
+
+    //     PostToCuisine()
+
+    // }, [item.id])
+
+
     const colorActive = active.check_ActiveCuisine ? '#087' : '#ccc'
     const colorTextActive = active.check_ActiveCuisine ? '#000' : '#ccc'
 
     const colorActiveLivreur = active.check_ActiveLivreur ? '#087' : '#ccc'
     const colorTextActiveLivreur = active.check_ActiveLivreur ? '#000' : '#ccc'
-
-    const { item, data } = route.params
 
     return (
 
@@ -57,29 +67,33 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
                     </View>
                 </View>
 
-                <View style={[{  backgroundColor: '#fff', marginTop: 13, paddingVertical:5,marginHorizontal:2,paddingHorizontal:5}]}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                <View style={[{ backgroundColor: '#fff', marginTop: 13, paddingVertical: 5, marginHorizontal: 2, paddingHorizontal: 5 }]}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
                         <View style={{ justifyContent: 'center', alignItems: "center", }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: "center",height:55, backgroundColor: '#eee', padding: 5,  borderRadius: 5 }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: "center", height: 55, backgroundColor: '#eee', padding: 5, borderRadius: 5 }}>
                                 <Icon name="md-person" color={'#078'} size={30} />
                                 <Text style={{ fontSize: 20, color: "#000", fontWeight: 'bold', }}>{item.delivery.full_name}</Text>
                             </View>
 
                         </View>
-                        <View style={{ flexDirection: 'row',    }}>
-                            <View style={{  alignItems: "center",  backgroundColor: '#eee',  borderRadius: 5 ,height:55}}>
+                        <View style={{ flexDirection: 'row', }}>
+                            <View style={{ alignItems: "center", backgroundColor: '#eee', borderRadius: 5, height: 55 }}>
                                 <Text style={{ fontSize: 20, color: '#000', fontWeight: 'bold', }}>Appler le Client</Text>
 
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between',  alignItems:'center', paddingHorizontal: 15 }}>
-                                    <Icon name="ios-call" color={'#078'} size={19} style={{margin:2}} />
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 15 }}>
+                                    <Icon name="ios-call" color={'#078'} size={19} style={{ margin: 2 }} />
 
                                     <TouchableOpacity>
                                         <Text style={{ fontSize: 16, marginVertical: 2, }}>{item.delivery.phone}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
+                            
                         </View>
+                        
                     </View>
+                    <Text>kitchenstate_id : {item.kitchenstate_id}</Text>
+                    <Text>state_id : {item.state_id}</Text>
                 </View>
 
 
@@ -137,15 +151,18 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
 
                                     }}
                                     onPress={() => {
+                                        if (item.id == idInfo) {
+                                            setActive({
 
-                                        setActive({
+                                                check_ActiveCuisine: false,
+                                                check_ActiveLivreur: true,
 
-                                            check_ActiveCuisine: false,
-                                            check_ActiveLivreur: true,
+                                                btn2: false,
+                                                btn3: true,
+                                            })
 
-                                            btn2: false,
-                                            btn3: true,
-                                        })
+                                        }
+
                                     }
 
                                     }>
@@ -169,7 +186,7 @@ const EtatCommande = ({ navigation: { goBack }, route, navigation }) => {
                                     </View>
 
                                 </TouchableOpacity> : null}
-                                
+
 
                             </View>
                         </View>

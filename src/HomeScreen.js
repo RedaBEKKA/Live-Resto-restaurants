@@ -40,7 +40,6 @@ const HomeScreen = ({ navigation, route }) => {
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     // functions
     useEffect(() => {
-
         fetch('https://dev500.live-resto.fr/apiv2e/orders', {
             method: 'GET',
             headers: myHeaders,
@@ -51,12 +50,18 @@ const HomeScreen = ({ navigation, route }) => {
                 console.log('data cmmd', dataCmmd)
                 setEtat(dataCmd.orders.others)
                 console.log('etat ', etat)
+                etat.map((i) => {
+                    console.log('etat  customer_id99', i.customer_id)
+                })
+                
+
+
             })
 
-    }, [])
+    }, [etat.customer_id])
 
 
-    
+
     const Comamnde = async () => {
         await fetch('https://dev500.live-resto.fr/apiv2e/orders', {
             method: 'GET',
@@ -72,104 +77,98 @@ const HomeScreen = ({ navigation, route }) => {
 
     return (
 
-        
 
-        
+
+
         <View style={styles.container}>
             <View>
-            <ScrollView style={{backgroundColor:'#000'}}>
-                <View style={styles.containerTow}>
-                    <Text style={styles.titleH1s}> {donne.establishment.title}</Text>
-                    <TouchableOpacity style={[{ justifyContent: 'center', alignItems: 'center', padding: 10 }]} onPress={() => Comamnde()}>
-                        <View>
-                            <Icon name="ios-refresh-circle" color={'#087'} size={40} />
+                <ScrollView style={{ backgroundColor: '#000' }}>
+                    <View style={styles.containerTow}>
+                        <Text style={styles.titleH1s}> {donne.establishment.title}</Text>
+                        <TouchableOpacity style={[{ justifyContent: 'center', alignItems: 'center', padding: 10 }]} onPress={() => Comamnde()}>
+                            <View>
+                                <Icon name="ios-refresh-circle" color={'#087'} size={40} />
 
-                        </View>
-                    </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
 
-                </View>
-                {/** btn mode avion */}
-                <View style={styles.containerOne} >
-                    {!openData.btn ? (
-                        <>
-                            <View style={styles.containerOccupe}>
-                                <View style={[styles.Occupe, {}]} >
-                                    <View style={styles.preferences}>
-                                        <Text style={styles.titleH1}>Mode Occupé</Text>
+                    </View>
+                    {/** btn mode avion */}
+                    <View style={styles.containerOne} >
+                        {!openData.btn ? (
+                            <>
+                                <View style={styles.containerOccupe}>
+                                    <View style={[styles.Occupe, {}]} >
+                                        <View style={styles.preferences}>
+                                            <Text style={styles.titleH1}>Mode Occupé</Text>
 
-                                        <Switch
-                                            trackColor={{ false: "#ccc", true: "#000" }}
-                                            thumbColor={isEnabled ? "#087" : "#000"}
-                                            ios_backgroundColor="#3e3e3e"
-                                            onValueChange={toggleSwitch}
-                                            value={isEnabled}
-                                        />
+                                            <Switch
+                                                trackColor={{ false: "#ccc", true: "#000" }}
+                                                thumbColor={isEnabled ? "#087" : "#000"}
+                                                ios_backgroundColor="#3e3e3e"
+                                                onValueChange={toggleSwitch}
+                                                value={isEnabled}
+                                            />
 
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
 
-                            <View style={styles.containerTimer}>
-                                {isEnabled ? (<TimerLine />) : null}
-                            </View>
-                        </>) : null
-                    }
-                </View>
-                {openData.visible ?
-                    <View>
-                        <ScrollView>
-                            {etat.map((item) => {
-                                return (
+                                <View style={styles.containerTimer}>
+                                    {isEnabled ? (<TimerLine />) : null}
+                                </View>
+                            </>) : null
+                        }
+                    </View>
+                    {openData.visible ?
+                        <View>
+                            <ScrollView>
+                                {etat.map((item, index) => {
+                                    return (
 
-                                    <View style={{ marginHorizontal: 15, marginVertical: 20 }} key={item.id}>
-                                        <TouchableOpacity style={styles.confirmer}
-                                            onPress={() => {
-                                                
-                                                    
-                                                    
-                                                    navigation.navigate("InfoScreen", { item,token :token})
-                                                
-                                                
-                                               
-                                            }
-                                            }
-                                        >
-                                            <View>
-                                                <Text style={[styles.titleH3, { fontSize: 18 }]}>details</Text>
-                                            </View>
-                                        </TouchableOpacity>
-
-                                        <View style={{ width: 110, height: 30, position: 'absolute', zIndex: 2, right: -10, top: -14, backgroundColor: '#087', justifyContent: 'center', borderRadius: 10 }}>
-                                            <Text style={[styles.titleH3, { fontSize: 20 }]}> #{item.id}</Text>
-                                        </View>
-
-                                        <View style={[styles.containerCommande,]}>
-                                            <View style={[styles.containerItem, { margin: 10 }]}>
+                                        <View style={{ marginHorizontal: 15, marginVertical: 20 }} key={item.id}>
+                                            <TouchableOpacity style={styles.confirmer}
+                                                onPress={() => {
+                                                    navigation.navigate("InfoScreen", {  item, token: token })
+                                                }
+                                                }
+                                            >
                                                 <View>
-                                                    <Text style={[styles.titleH4s, { marginTop: 3 }]}> Date  : {item.for_when}</Text>
-                                                    <Text style={[styles.titleH4s, { marginTop: 3 }]}> Prix Totale  : {item.total} Eur</Text>
-                                                    <View style={{ flexDirection: 'row', justifyContent: 'center', margin: 5 }}>
-                                                        <Icon name="ios-navigate" color={'#078'} size={19} style={{ marginTop: 3 }} />
-                                                        <Text style={{ color: '#fff', fontSize: 16, marginBottom: 10, }}> Aucun livreur n'a encore été trouver</Text>
+                                                    <Text style={[styles.titleH3, { fontSize: 18 }]}>details</Text>
+                                                </View>
+                                            </TouchableOpacity>
+
+                                            <View style={{ width: 110, height: 30, position: 'absolute', zIndex: 2, right: -10, top: -14, backgroundColor: '#087', justifyContent: 'center', borderRadius: 10 }}>
+                                                <Text style={[styles.titleH3, { fontSize: 20 }]}> #{item.id}</Text>
+                                            </View>
+
+                                            <View style={[styles.containerCommande,]}>
+                                                <View style={[styles.containerItem, { margin: 10 }]}>
+                                                    <View>
+                                                        <Text style={[styles.titleH4s, { marginTop: 3 }]}> Date  : {item.for_when}</Text>
+                                                        <Text style={[styles.titleH4s, { marginTop: 3 }]}> Prix Totale  : {item.total} Eur</Text>
+                                                        <View style={{ flexDirection: 'row', justifyContent: 'center', margin: 5 }}>
+                                                            <Icon name="ios-navigate" color={'#078'} size={19} style={{ marginTop: 3 }} />
+                                                            <Text style={{ color: '#fff', fontSize: 16, marginBottom: 10, }}> Aucun livreur n'a encore été trouver</Text>
+                                                        </View>
                                                     </View>
                                                 </View>
                                             </View>
                                         </View>
-                                    </View>
 
-                                )
-                            })
+                                    )
+                                })
 
-                            }
-                        </ScrollView>
-                    
+                                }
+                            </ScrollView>
 
-                    
 
-                    </View>
-                        
-                    : null}
-                    </ScrollView>
+
+
+                        </View>
+
+                        : null}
+                </ScrollView>
             </View>
             <View>
                 {openData.btn ? (
@@ -246,7 +245,7 @@ const HomeScreen = ({ navigation, route }) => {
 
 
         </View>
-        
+
     )
 }
 

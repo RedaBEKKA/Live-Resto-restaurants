@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext, DataContext, ShowDataOpen } from './../components/context'
-
+import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ModelContainer from './ModelContainer';
 
@@ -28,46 +28,11 @@ const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
     const [debut, setDebut] = useState('10:00');
     const [fin, setFin] = useState('20:00');
     const [ordersMap, setOrder] = React.useState([]);
-
-    const validerCommande = async () => {
-        await  fetch('https://dev500.live-resto.fr/apiv2e/orders/update', {
-            method: 'POST',
-            headers: {
-                'accept': 'application/json',
-                'Content-type': 'application/json',
-                "Authorization": "Bearer" + token
-            },
-            body: JSON.stringify({
-                "orderId": item.id,
-                "action": "kitchenstate_id",
-                "kitchenstate_id": 10
-            })
-        })
-            .then(res => {
-                if (!res.ok) {
-                    alert('erreur ')
-                    console.log(token)
-                    console.log(dataID)
-                    throw new Error('erreur ! la validation de la commande echoué' ,token)
-                }
-                
-                return res.json()
-            }
-            )
-
-            .then((response) => {
-                console.log(token)
-                console.log(dataID)
-                console.log(response)
-                alert('succes')
-                navigation.navigate("EtatCommande", { item, ordersMap, dataID})
-            })
+    const [result, setResult] = React.useState('')
 
 
-    }
 
-
-    const idData = async()=>{
+    const idData = async () => {
         try {
             await fetch('https://dev500.live-resto.fr/apiv2e/orders/details', {
                 method: 'POST',
@@ -80,25 +45,97 @@ const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
                     "orderId": item.id
                 })
             })
-                .then( res =>   res.json())
+                .then(res => res.json())
                 .then((dataStatus) => {
-                 
+
                     setOrder(dataStatus.order.products)
                     console.log(item.id)
-              
+
                 })
-            
+
         } catch (error) {
-            
+
         }
 
     }
 
-    useEffect (  async () => {
+    useEffect(async () => {
 
         idData()
-            
+
     }, [item.id])
+
+
+    const PostToCuisine = async () => {
+        // try {
+            await fetch('https://dev500.live-resto.fr/apiv2e/orders/update', {
+               method: 'POST',
+               headers: {
+                   'accept': 'application/json',
+                   'Content-type': 'application/json',
+                   "Authorization": "Bearer " + token
+               },
+               body: JSON.stringify({
+                   "orderId": item.id,
+                   "action": "kitchenstate_id",
+                   "kitchenstate_id": 30     
+                    // "orderId": 55593,
+                    // "action": "kitchenstate_id",
+                    // "kitchenstate_id": 30
+               })
+           })
+               .then(res => 
+                { 
+                    console.log('then 1 ' ,res)
+                    return (res.json())
+                
+                } )
+               
+               .then((response) => {
+                   //let resr =  JSON.stringify(response)
+                   console.log('Token ||||',token)
+                   console.log('item.id|||', item.id)
+                   setResult(response)
+                   console.log('response||||', response)
+                   console.log('response||||', response['result'])
+               })
+            
+        // } catch (error) {
+            
+        // }
+    }
+
+    //     axios.post('https://dev500.live-resto.fr/apiv2e/orders/update', {
+            
+    //            headers: {
+    //                'accept': 'application/json',
+    //                'Content-type': 'application/json',
+    //                "Authorization": "Bearer" + token
+    //            },
+    //            body: JSON.stringify({
+                
+    //                 "orderId": 55593,
+    //                 "action": "kitchenstate_id",
+    //                 "kitchenstate_id": 30
+                  
+    //            })
+    //       })
+    //       .then(function (response) {
+    //         console.log(response);
+    //       })
+    //       .catch(function (error) {
+    //         console.log(error);
+    //       });
+
+
+
+    //     } catch (error) {
+    //         console.log('result error',error)
+            
+    //     }
+   
+   
+    //    }
 
 
     return (
@@ -113,25 +150,24 @@ const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
                         <Icon name="ios-information-circle-outline" color={'#fff'} size={35} />
                     </View>
                     <View style={[{ width: "100%" }]}>
-                        <Text style={[styles.titleH3, { fontSize: 19, color: '#fff',width:'100%' }]}> Récupération : {item.for_when} </Text>
+                        <Text style={[styles.titleH3, { fontSize: 19, color: '#fff', width: '100%' }]}> Récupération : {item.for_when} </Text>
                     </View>
                 </View>
-                <View style={[{  backgroundColor: '#fff', marginTop: 13, paddingVertical:5,marginHorizontal:2,paddingHorizontal:5}]}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                <View style={[{ backgroundColor: '#fff', marginTop: 13, paddingVertical: 5, marginHorizontal: 2, paddingHorizontal: 5 }]}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
                         <View style={{ justifyContent: 'center', alignItems: "center", }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: "center",height:55, backgroundColor: '#eee', padding: 5,  borderRadius: 5 }}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: "center", height: 55, backgroundColor: '#eee', padding: 5, borderRadius: 5 }}>
                                 <Icon name="md-person" color={'#078'} size={30} />
                                 <Text style={{ fontSize: 20, color: "#000", fontWeight: 'bold', }}>{item.delivery.full_name}</Text>
                             </View>
 
                         </View>
-                        <View style={{ flexDirection: 'row',  justifyContent:'space-evenly'  }}>
-                            <View style={{  alignItems: "center",  backgroundColor: '#eee',  borderRadius: 5 ,height:55}}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                            <View style={{ alignItems: "center", backgroundColor: '#eee', borderRadius: 5, height: 55 }}>
                                 <Text style={{ fontSize: 20, color: '#000', fontWeight: 'bold', }}>Appler le Client</Text>
 
-                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems:'center', paddingHorizontal: 15 }}>
-                                    <Icon name="ios-call" color={'#078'} size={20}  style={{margin:2}} />
-
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 15 }}>
+                                    <Icon name="ios-call" color={'#078'} size={20} style={{ margin: 2 }} />
                                     <TouchableOpacity>
                                         <Text style={{ fontSize: 16, marginVertical: 2, }}>{item.delivery.phone}</Text>
                                     </TouchableOpacity>
@@ -167,13 +203,11 @@ const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
                         {ordersMap.map((i) => {
                             return (
                                 <View style={{ height: 45, backgroundColor: '#eee', paddingHorizontal: 5, marginBottom: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderRadius: 5, width: '95%', alignSelf: 'center' }}>
-                                    <Text style={{ fontSize: 13, fontWeight: 'bold' ,width:'60%'}}> {i.title} </Text>
-                                    <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-between',width:100}}>
-                                    <Text style={{ fontSize: 13, fontWeight: 'bold' }}> Qt:{i._joinData.quantity} </Text>
-                                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#078' }}>{i._joinData.price} Eur</Text>
-
+                                    <Text style={{ fontSize: 13, fontWeight: 'bold', width: '60%' }}> {i.title} </Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: 100 }}>
+                                        <Text style={{ fontSize: 13, fontWeight: 'bold' }}> Qt:{i._joinData.quantity} </Text>
+                                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#078' }}>{i._joinData.price} Eur</Text>
                                     </View>
-                                    
                                 </View>
                             )
                         })
@@ -210,10 +244,14 @@ const InfoScreen = ({ navigation: { goBack }, route, navigation }) => {
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.btnScondary, { width: "40%", marginVertical: 10, backgroundColor: '#078', borderRadius: 12, justifyContent: 'center', alignItems: 'center', borderColor: '#078', borderWidth: 1 }]}
                         onPress={() => {
-                            validerCommande()
-                            //navigation.navigate("EtatCommande", { item, ordersMap, dataID})
+                            PostToCuisine() 
+                            //if (item.kitchenstate_id == '30'){
+                                navigation.navigate("EtatCommande", {item})
+                            //} else {
+                              //  alert('erreur valider la commande ')
 
-
+                           // }
+                            
                         }}
 
                     >
